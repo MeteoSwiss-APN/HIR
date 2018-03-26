@@ -1,0 +1,182 @@
+\section{Expression elements}
+
+\element{Literal}
+
+The {\tt Literal} defines the specification of a literal. 
+\HIRContentsModel{ (Type) }
+
+\begin{HIRChildElements}
+	\HIRElementDef{Type}
+	{type of the literal}{R}
+\end{HIRChildElements}
+
+\begin{HIRAttributes}
+	\HIRAttrDef{value}{string}
+	{value of the literal}{R}
+\end{HIRAttributes}
+
+\element{AssignmentOp}
+
+The {\tt AssignmentOp} defines an assignment operation expression. 
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(Expr[lhs], Expr[rhs])
+
+where if (scope == domain_computation)
+
+[lhs] = (^\concept{VarDecl}^|^\concept{VarAccess}^|^\concept{FieldAccess}^),
+[rhs] =	(^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{Literal}^|^\concept{FieldAccess}^)
+
+else
+
+[lhs] = (^\concept{VarDecl}^|^\concept{VarAccess}^)
+[rhs] =	(^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{Literal}^)
+\end{lstlisting}
+
+
+\begin{HIRChildElements}
+	\HIRElementDef{[lhs]}
+	{left hand side expression of the binary operator}{R}
+	\HIRElementDef{[rhs]}
+	{right hand side expression of the binary operator}{R}
+\end{HIRChildElements}
+
+
+\element{BinaryOp}
+
+The {\tt BinaryOp} defines an binary operator expression.
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(Expr[lhs], Expr[rhs])
+
+where if (scope == domain_computation)
+
+[lhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
+[rhs] =	(^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
+
+else
+
+[lhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
+[rhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
+\end{lstlisting}
+
+
+\begin{HIRChildElements}
+	\HIRElementDef{[lhs]}
+	{left hand side expression of the binary operator}{R}
+	\HIRElementDef{[rhs]}
+	{right hand side expression of the binary operator}{R}
+\end{HIRChildElements}
+
+\begin{HIRAttributesVal}
+	\HIRAttrValDef{operator}{string}
+	{operator being applied to the operands}{+,-,*,/}{R}
+\end{HIRAttributesVal}
+
+\element{UnaryOp}
+
+The {\tt UnaryOp} defines an unary operator expression.
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(Expr)
+
+where if (scope == domain_computation)
+
+[Expr] = (^\concept{VarDecl}^|^\concept{VarAccess}^|^\concept{FieldAccess}^),
+
+else
+
+[Expr] = (^\concept{VarDecl}^|^\concept{VarAccess}^|)
+\end{lstlisting}
+
+
+\begin{HIRChildElements}
+	\HIRElementDef{[lhs]}
+	{left hand side expression of the binary operator}{R}
+	\HIRElementDef{[rhs]}
+	{right hand side expression of the binary operator}{R}
+\end{HIRChildElements}
+
+\begin{HIRAttributesVal}
+	\HIRAttrValDef{operator}{string}
+	{operator being applied to the operand}{+=,-=,*=,/=,++,--}{R}
+\end{HIRAttributesVal}
+
+\element{TernaryOp}
+
+The {\tt TernaryOp} defines an ternary operator expression.
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(Expr[cond], Expr[lhs], Expr[rhs])
+
+where if (scope == domain_computation)
+[cond] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
+[lhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^),
+[rhs] =	(^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
+
+else
+
+[cond] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
+[lhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
+[rhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{[cond]}
+	{expression that defines the condition of the ternary operator}{R}
+	\HIRElementDef{[lhs]}
+	{left hand side expression of the binary operator}{R}
+	\HIRElementDef{[rhs]}
+	{right hand side expression of the binary operator}{R}
+\end{HIRChildElements}
+
+\begin{HIRAttributes}
+	\HIRAttrDef{operator}{string}
+	{operator being applied to the operands}{R}
+\end{HIRAttributes}
+
+
+\element{VarAccess}
+The {\tt VarAccess} is a expression that defines an access to a \concept{VarDecl}
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(^\concept{VarDecl}^,^\concept{Literal}^*)
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{VarDecl}
+	{The var declaration that is being accessed in this expression}{R}
+	\HIRElementDef{Literal}
+	{access index of the var, when it is declared with more than 1 dimension}{O}
+\end{HIRChildElements}
+
+
+\element{FieldAccess}
+The {\tt FieldAccess} is a expression that defines an access to a field
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(^\concept{FieldDecl}^,^\concept{Offset}^+)
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{FieldDecl}
+	{The field decl that is being accessed in this expression}{R}
+	\HIRElementDef{Offset}
+	{An offset (relative to current grid position) used to de-reference the field access}{O}
+\end{HIRChildElements}
+
+
+
+ 

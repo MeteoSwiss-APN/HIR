@@ -1,0 +1,75 @@
+\section{Statement elements}
+
+\element{VarDecl}
+
+The {\tt VarDecl} represents a N-dimensional scalar.
+\HIRContentsModel{ (Type) }
+
+\begin{HIRChildElements}
+	\HIRElementDef{Type}
+	{type of the variable n-dimensional variable}{R}
+\end{HIRChildElements}
+
+\begin{HIRAttributes}
+	\HIRAttrDef{name}{text}
+	{name of the variable}{R}
+	\HIRAttrDef{ndims}{int}
+	{number of dimensions of the variable}{R}
+	\HIRAttrDef{initialization}{string}
+	{operation to initialize the variable}{0}
+\end{HIRAttributes}
+
+\element{IfStmt}
+The {\tt IfStmt} is a statement element that defines an if condition. 
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+([cond], (^\concept{Stmt}^+)[then], (^\concept{Stmt}^+)[else])
+
+where if (scope == domain_computation)
+[cond] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
+else
+[cond] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{cond}
+	{expression that defines the condition of the if block}{R}
+	\HIRElementDef{then}
+	{sequence of statements that compose the {\tt then} computation of the block}{R}
+	\HIRElementDef{else}
+	{sequence of statements that compose the {\tt else} computation of the block}{O}
+\end{HIRChildElements}
+
+\element{BlockStmt}
+The {\tt BlockStmt} is a statement element that defines an block (of statements). 
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(^\concept{Stmt}^+)
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{Stmt}
+	{sequence of statements that compose the {\tt block} computation}{R}
+\end{HIRChildElements}
+
+\element{Stmt}
+The {\tt Stmt} is an alias element to any element that is a statement. 
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(^\concept{VarDecl}^|^\concept{IfStmt}^|^\concept{BlockStmt}^|^\concept{IfStmt}^|^\concept{ExprStmt}^)
+\end{lstlisting}
+
+\element{ExprStmt}
+The {\tt ExprStmt} is an statement made by an expression
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(^\concept{UnaryOp}^|^\concept{TernaryOp}^|^\concept{AssignmentOp}^)
+\end{lstlisting}
