@@ -1,14 +1,14 @@
 \section{Introduction}
 
 
-This document describes ...
+This document provides a full specification of the HIR
 
+\subsection{Conventions}
 
-HIR has the following functions and characteristics:
+Some of the elements will allow to have different children type of nodes depending on the scope of the node.
 
-\begin{itemize}
-\item Cat 1
-\item Cat 2
-\end{itemize}
-
-More descrition.
+There are two scopes: 
+\begin{enumerate}
+	\item control\_flow defines the scope of nodes where one or more of the parallel dimensions of the \concept{Domain} are not yet resolved within a \concept{Computation}
+	\item domain\_computation is the scope of nodes where all the parallel dimensions of the \concept{Domain} are resolved within a \concept{Computation}
+\end{enumerate}

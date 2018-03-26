@@ -9,7 +9,7 @@
 }
 
 \newcommand{\element}[1] {
-\section{{\tt #1} element}
+\subsection{{\tt #1} element}
 \label{cp:#1}
 }
 
@@ -36,6 +36,17 @@ name & type & description & R/O \\ \hline\hline
 
 \newcommand{\HIRAttrDef}[4]{
 {\tt #1} & #2 & #3 & #4\\ \hline }
+
+\newenvironment{HIRAttributesVal}{
+	\subsubsection*{Attributes}
+	\begin{tabular}{|l|c|p{8cm}|c | c|}
+		\hline
+		name & type & description & suppoted values & R/O \\ \hline\hline
+	}{\end{tabular}}
+
+\newcommand{\HIRAttrValDef}[5]{
+	{\tt #1} & #2 & #3 & #4 & #5\\ \hline }
+
 % %
 % % \newenvironment{HIRControlList}{
 % % \subsubsection*{Control list}
