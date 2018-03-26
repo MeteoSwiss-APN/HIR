@@ -1,0 +1,78 @@
+\def\openb{{\it [}}
+\def\closeb{{\it ]}}
+
+\def\DAG{$^\dagger$}
+\def\DDAG{$^\ddagger$}
+%
+\newcommand{\concept}[1]{
+\hyperref[cp:#1]{#1}	
+}
+
+\newcommand{\element}[1] {
+\section{{\tt #1} element}
+\label{cp:#1}
+}
+
+\newcommand{\HIRContentsModel}[1]{
+\subsubsection*{Contents model}
+{\tt #1}}
+%
+\newenvironment{HIRChildElements}{
+\subsubsection*{Child elements}
+\begin{tabular}{|l|p{10cm}|c|}
+\hline
+ name & description & R/O \\ \hline\hline
+}{\end{tabular}}
+%
+\newcommand{\HIRElementDef}[3]{
+{\tt #1} & #2 & #3 \\ \hline }
+%
+\newenvironment{HIRAttributes}{
+\subsubsection*{Attributes}
+\begin{tabular}{|l|c|p{10cm}|c|}
+\hline
+name & type & description & R/O \\ \hline\hline
+}{\end{tabular}}
+
+\newcommand{\HIRAttrDef}[4]{
+{\tt #1} & #2 & #3 & #4\\ \hline }
+% %
+% % \newenvironment{HIRControlList}{
+% % \subsubsection*{Control list}
+% % The values for the name attribute and the child element of the {\tt namedValue} element are as follows:
+% % \newline
+% % \newline
+% % \begin{tabular}{|l|p{10cm}|c|}
+% % \hline
+% %  name attribute & child element & R/O \\ \hline\hline
+% % }{\end{tabular}}
+%
+% \newenvironment{HIRSpecifier}[3]{
+% {\tt #1} & #2 & #3 \\ \hline }
+%
+% \newenvironment{HIRElementList}{
+% \begin{tabular}{|l|p{10cm}|}
+% \hline
+%  element & format of the content \\ \hline\hline
+% }{\end{tabular}}
+%
+% \newenvironment{HIRElementFormat}[2]{
+% {\tt #1} & #2 \\ \hline }
+%
+% \newenvironment{HIROperations}{
+% \begin{tabular}{|l|p{4cm}|l|}
+% \hline
+%  element & operator & operation \\ \hline\hline
+% }{\end{tabular}}
+%
+% \newenvironment{HIROperation}[3]{
+% {\tt #1} & #2 & #3 \\ \hline }
+%
+% \newenvironment{HIRDataTypeNames}{
+% \begin{tabular}{|l|p{11cm}|}
+% \hline
+%  type name & description \\ \hline\hline
+% }{\end{tabular}}
+%
+% \newenvironment{HIRDataTypeName}[2]{
+% {\tt #1} & #2 \\ \hline }

@@ -1,0 +1,301 @@
+\element{Program}
+
+Description of the element {\tt Program} element:
+
+\HIRContentsModel{ (typeTable, globalSymbols, globalDeclarations) }
+
+\begin{HIRChildElements}
+\HIRElementDef{typeTable}
+{information on data type used by the program}{R}
+\HIRElementDef{globalSymbols}
+{information on global variables used by the program}{R}
+\HIRElementDef{globalDeclarations}
+{information about function and variable declarations}{R}
+\end{HIRChildElements}
+
+\begin{HIRAttributes}
+\HIRAttrDef{compiler-info}{text}
+{F-to-F translator information}{O}
+\HIRAttrDef{version}{text}
+{F-to-F translator version information}{O}
+\HIRAttrDef{time}{text}
+{Date and time of translation}{O}
+\HIRAttrDef{language}{text}
+{source language information}{O}
+\HIRAttrDef{source}{text}
+{source code information}{O}
+\end{HIRAttributes}
+
+\element{Dimension}
+
+The {\tt Dimension} elements defines a dimension of a multidimensional space where fields are discretized and over which computations iterate. 
+
+\HIRContentsModel{ () }
+\begin{HIRAttributes}
+	\HIRAttrDef{name}{text}
+	{Name of the dimension}{R}
+\end{HIRAttributes}
+
+\section{ {\tt Type} element}
+
+The {\tt Type} defines the type of storage declarations
+\HIRContentsModel{ () }
+
+\begin{HIRAttributes}
+	\HIRAttrDef{name}{text}
+	{any of the supported types (double|int|float)}{R}
+\end{HIRAttributes}
+
+\element{FieldDecl}
+The {\tt FieldDecl} element defines a multidimensional field storage
+\HIRContentsModel{ (Dimension+) }
+
+\begin{HIRChildElements}
+	\HIRElementDef{Dimension}
+	{dimensions of the multidimensional space where the storage is defined}{R}
+\end{HIRChildElements}
+
+\begin{HIRAttributes}
+	\HIRAttrDef{name}{text}
+	{name of the field}{R}
+\end{HIRAttributes}
+
+\element{VarDecl}
+
+The {\tt VarDecl} represents a N-dimensional scalar.
+\HIRContentsModel{ (Type+) }
+
+\begin{HIRChildElements}
+	\HIRElementDef{Type}
+	{type of the variable n-dimensional variable}{R}
+\end{HIRChildElements}
+
+\begin{HIRAttributes}
+	\HIRAttrDef{name}{text}
+	{name of the variable}{R}
+	\HIRAttrDef{ndims}{int}
+	{number of dimensions of the variable}{R}
+	\HIRAttrDef{initialization}{string}
+	{operation to initialize the variable}{0}
+\end{HIRAttributes}
+
+\element{ControlFlowGraph}
+
+The {\tt ControlFlowGraph} contains the sequence of statements of a control flow of the program. 
+\HIRContentsModel{ (VarDecl|IfStmt|BlockStmt|UnaryOp|BinaryOp|TernaryOp|AssignmentOp|Literal) }
+
+\element{Literal}
+
+The {\tt Literal} defines the specification of a literal. 
+\HIRContentsModel{ (Type) }
+
+\begin{HIRChildElements}
+	\HIRElementDef{Type}
+	{type of the literal}{R}
+\end{HIRChildElements}
+
+\begin{HIRAttributes}
+	\HIRAttrDef{value}{int|double}
+	{value of the literal}{R}
+\end{HIRAttributes}
+
+\element{AssignmentOp}
+
+The {\tt AssignmentOp} defines an assignment operation expression. 
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(Expr[lhs], Expr[rhs])
+
+where if (scope == domain_computation)
+
+[lhs] = (^\concept{VarDecl}^|^\concept{VarAccess}^|^\concept{FieldAccess}^),
+[rhs] =	(^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{Literal}^|^\concept{FieldAccess}^)
+
+else
+
+[lhs] = (^\concept{VarDecl}^|^\concept{VarAccess}^)
+[rhs] =	(^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{Literal}^)
+\end{lstlisting}
+
+
+\begin{HIRChildElements}
+	\HIRElementDef{[lhs]}
+	{left hand side expression of the binary operator}{R}
+	\HIRElementDef{[rhs]}
+	{right hand side expression of the binary operator}{R}
+\end{HIRChildElements}
+
+
+\element{BinaryOp}
+
+The {\tt BinaryOp} defines an binary operator expression.
+ 
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(Expr[lhs], Expr[rhs])
+
+where if (scope == domain_computation)
+ 
+[lhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
+[rhs] =	(^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
+
+else
+
+[lhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
+[rhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
+\end{lstlisting}
+
+
+\begin{HIRChildElements}
+	\HIRElementDef{[lhs]}
+	{left hand side expression of the binary operator}{R}
+	\HIRElementDef{[rhs]}
+	{right hand side expression of the binary operator}{R}
+\end{HIRChildElements}
+
+\begin{HIRAttributes}
+	\HIRAttrDef{operator}{string}
+	{operator being applied to the operands}{R}
+\end{HIRAttributes}
+
+\element{UnaryOp}
+
+The {\tt UnaryOp} defines an unary operator expression.
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(Expr)
+
+where if (scope == domain_computation)
+
+[Expr] = (^\concept{VarDecl}^|^\concept{VarAccess}^|^\concept{FieldAccess}^),
+
+else
+
+[Expr] = (^\concept{VarDecl}^|^\concept{VarAccess}^|)
+\end{lstlisting}
+
+
+\begin{HIRChildElements}
+	\HIRElementDef{[lhs]}
+	{left hand side expression of the binary operator}{R}
+	\HIRElementDef{[rhs]}
+	{right hand side expression of the binary operator}{R}
+\end{HIRChildElements}
+
+\begin{HIRAttributes}
+	\HIRAttrDef{operator}{string}
+	{operator being applied to the operands}{R}
+\end{HIRAttributes}
+
+\element{TernaryOp}
+
+The {\tt TernaryOp} defines an ternary operator expression.
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(Expr[cond], Expr[lhs], Expr[rhs])
+
+where if (scope == domain_computation)
+[cond] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
+[lhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^),
+[rhs] =	(^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
+
+else
+
+[cond] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
+[lhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
+[rhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{[cond]}
+	{expression that defines the condition of the ternary operator}{R}
+	\HIRElementDef{[lhs]}
+	{left hand side expression of the binary operator}{R}
+	\HIRElementDef{[rhs]}
+	{right hand side expression of the binary operator}{R}
+\end{HIRChildElements}
+
+\begin{HIRAttributes}
+	\HIRAttrDef{operator}{string}
+	{operator being applied to the operands}{R}
+\end{HIRAttributes}
+
+
+\element{VarAccess}
+The {\tt VarAccess} is a expression that defines an access to a \concept{VarDecl}
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(^\concept{VarDecl}^,^\concept{Literal}^+)
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{VarDecl}
+	{The var declaration that is being accessed in this expression}{R}
+	\HIRElementDef{Literal}
+	{access index of the var, when it is declared with more than 1 dimension}{O}
+\end{HIRChildElements}
+
+
+\element{FieldAccess}
+ The {\tt FieldAccess} is a expression that defines an access to a field
+ 
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(^\concept{FieldDecl}^,^\concept{Offset}^+)
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{FieldDecl}
+	{The field decl that is being accessed in this expression}{R}
+	\HIRElementDef{Offset}
+	{An offset (relative to current grid position) used to de-reference the field access}{O}
+\end{HIRChildElements}
+
+
+\element{Offset}
+The {\tt Offset} is the relative distance in a given \concept{Dimension} to a neighbor grid point.
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(^\concept{Dimension}^)
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{Dimension}
+	{Identifies the dimension where the offset is computed}{R}
+\end{HIRChildElements}
+
+\begin{HIRAttributes}
+	\HIRAttrDef{distance}{int}
+	{relative distance in the given dimension of the offset}{R}
+\end{HIRAttributes}
+
+\element{BoundaryCondition}
+The {\tt BoundaryCondition} defines the strategy to apply a boundary condition to a field, if required.
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(^\concept{FieldDecl}^+ )
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{Dimension}
+	{Identifies the dimension where the offset is computed}{R}
+\end{HIRChildElements}
+
+\begin{HIRAttributes}
+	\HIRAttrDef{distance}{int}
+	{relative distance in the given dimension of the offset}{R}
+\end{HIRAttributes}
