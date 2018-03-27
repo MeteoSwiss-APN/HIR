@@ -35,13 +35,15 @@ Program {
   field : FieldDecl {
     name : Tnoscat, Dimension : [ncol,nlay]
   }
-  vararg : VarArg {
+  vararg : VarDecl {
     type : int
     name : ncolbounds
+    isarg : true
   }
-  vararg : VarArg {
+  vararg : VarDecl {
     type : int
     name : nlaybounds
+    isarg : true
   }  
   scope : ScopedProgram {
     // two_stream (Missing arg list, name of what is called, shouldn't inline stuff at this point)

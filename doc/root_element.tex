@@ -7,7 +7,7 @@ Description of the element {\tt Program} element:
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default]
-()^\concept{Dimension}^[dimension]+, ^\concept{Domain}^[domain], ^\concept{FieldDecl}^[field]+, ^\concept{VarArg}^[vararg]*, (^\concept{ScopedProgram}^|^\concept{ExternalKernel}^)[scope]+)
+()^\concept{Dimension}^[dimension]+, ^\concept{Domain}^[domain], ^\concept{FieldDecl}^[field]+, ^\concept{VarDecl}^[vararg]*, (^\concept{ScopedProgram}^|^\concept{ExternalKernel}^)[scope]+)
 \end{lstlisting}
 
 \begin{HIRChildElements}
@@ -57,23 +57,6 @@ The domain provides domain information of the application that is used as hints 
 	{specifies dimensions on which computations are embarrassingly parallel}{R}	
 \end{HIRChildElements}
 
-\element{VarArg}
-The {\tt VarArg} element defines a scalar variable that is argument to a \concept{Program}
-
-\HIRContentsModel{ (Type) }
-
-\begin{HIRChildElements}
-	\HIRElementDef{Type}
-	{type of the variable n-dimensional variable}{R}
-\end{HIRChildElements}
-
-\begin{HIRAttributes}
-	\HIRAttrDef{name}{text}
-	{name of the variable}{R}
-	\HIRAttrDef{ndims}{int}
-	{number of dimensions of the variable}{R}
-\end{HIRAttributes}
-
 \element{ScopedProgram}
 
 The {\tt ScopedProgram} defines all the computations performed using concepts of the HIR
@@ -81,7 +64,7 @@ The {\tt ScopedProgram} defines all the computations performed using concepts of
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default]
-(BlockStmt)
+(^\concept{BlockStmt}^)
 \end{lstlisting}
 
 \begin{HIRChildElements}
@@ -96,7 +79,7 @@ The {\tt ExternalKernel} defines a call to an external kernel, for which computa
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default]
-(FieldDecl[input]+, FieldDecl[output]+)
+(^\concept{FieldDecl}^[input]+, ^\concept{FieldDecl}^[output]+)
 \end{lstlisting}
 
 \begin{HIRChildElements}
@@ -161,11 +144,17 @@ The {\tt Type} defines the type of storage declarations
 
 \element{FieldDecl}
 The {\tt FieldDecl} element defines a multidimensional field storage
-\HIRContentsModel{ (Dimension+) }
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(^\concept{Type}^,^\concept{Dimension}^+)
+\end{lstlisting}
 
 \begin{HIRChildElements}
 	\HIRElementDef{Dimension}
 	{dimensions of the multidimensional space where the storage is defined}{R}
+	\HIRElementDef{Type}
+	{value type of the grid elements of the field}{R}	
 \end{HIRChildElements}
 
 \begin{HIRAttributes}
