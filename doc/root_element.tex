@@ -7,10 +7,12 @@ Description of the element {\tt Program} element:
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default]
-(^\concept{Domain}^[domain], ^\concept{FieldDecl}^[field]+, ^\concept{VarDecl}^[vararg]*, (^\concept{ScopedProgram}^|^\concept{ExternalKernel}^)[scope]+)
+(^\concept{Dimension}^[dimension]+,^\concept{Domain}^[domain], ^\concept{FieldDecl}^[field]+, ^\concept{VarDecl}^[vararg]*, (^\concept{ScopedProgram}^|^\concept{ExternalKernel}^)[scope]+)
 \end{lstlisting}
 
 \begin{HIRChildElements}
+\HIRElementDef{dimension}
+{Definition of all the dimensions used within the program}{R}
 \HIRElementDef{domain}
 {specifies a domain that serves as hints to the compiler}{R}
 \HIRElementDef{field}

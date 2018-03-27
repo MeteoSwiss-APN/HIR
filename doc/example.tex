@@ -2,37 +2,38 @@
 
 \begin{lstlisting}[style=default]
 Program {
+  dimension : GridDimension {[ncol, nlay, ngpt]}
   domain : Domain {
     parallel_domain_dim : ncol
     vertical_dim : nlay
     parallel_dim : ngpt
   },
   field : FieldDecl {
-    name : mu0, GridDimension : [ncol]
+    name : mu0, GridDimension {[ncol]}
   }
   field : FieldDecl {
-    name : tau, GridDimension : [ncol, nlay, ngpt]
+    name : tau, GridDimension {[ncol, nlay, ngpt]}
   }
   field : FieldDecl {
-    name : w0, GridDimension : [ncol,nlay, ngpt]
+    name : w0, GridDimension {[ncol,nlay, ngpt]}
   }
   field : FieldDecl {
-    name : g, GridDimension : [ncol,nlay, ngpt]
+    name : g, GridDimension {[ncol,nlay, ngpt]}
   }
   field : FieldDecl {
-    name : Rdif, GridDimension : [ncol,nlay]
+    name : Rdif, GridDimension {[ncol,nlay]}
   }
   field : FieldDecl {
-    name : Tdif, GridDimension : [ncol,nlay]
+    name : Tdif, GridDimension {[ncol,nlay]}
   }
   field : FieldDecl {
-    name : Rdir, GridDimension : [ncol,nlay]
+    name : Rdir, GridDimension {[ncol,nlay]}
   }
   field : FieldDecl {
-    name : Tdir, GridDimension : [ncol,nlay]
+    name : Tdir, GridDimension {[ncol,nlay]}
   }
   field : FieldDecl {
-    name : Tnoscat, GridDimension : [ncol,nlay]
+    name : Tnoscat, GridDimension {[ncol,nlay]}
   }
   vararg : VarDecl {
     type : int
