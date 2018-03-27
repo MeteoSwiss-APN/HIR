@@ -7,12 +7,10 @@ Description of the element {\tt Program} element:
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default]
-()^\concept{Dimension}^[dimension]+, ^\concept{Domain}^[domain], ^\concept{FieldDecl}^[field]+, ^\concept{VarDecl}^[vararg]*, (^\concept{ScopedProgram}^|^\concept{ExternalKernel}^)[scope]+)
+(^\concept{Domain}^[domain], ^\concept{FieldDecl}^[field]+, ^\concept{VarDecl}^[vararg]*, (^\concept{ScopedProgram}^|^\concept{ExternalKernel}^)[scope]+)
 \end{lstlisting}
 
 \begin{HIRChildElements}
-\HIRElementDef{dimension}
-{Definition of all the dimensions used within the program}{R}
 \HIRElementDef{domain}
 {specifies a domain that serves as hints to the compiler}{R}
 \HIRElementDef{field}
@@ -45,7 +43,7 @@ The domain provides domain information of the application that is used as hints 
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default]
-((^\concept{Dimension}^[domain_parallel_dim])+, ^\concept{Dimension}^[vertical_dim], (^\concept{Dimension}^[parallel_dim])+
+((^\concept{GridDimension}^[domain_parallel_dim])+, ^\concept{GridDimension}^[vertical_dim], (^\concept{GridDimension}^[parallel_dim])+
 \end{lstlisting}
 
 \begin{HIRChildElements}
@@ -90,9 +88,9 @@ The {\tt ExternalKernel} defines a call to an external kernel, for which computa
 		
 \end{HIRChildElements}
 
-\element{Dimension}
+\element{GridDimension}
 
-The {\tt Dimension} elements defines a dimension of a multidimensional space where fields are discretized and over which \concept{Computation}s iterate. 
+The {\tt GridDimension} elements defines a dimension of a multidimensional space where fields are discretized and over which \concept{Computation}s iterate. 
 
 \HIRContentsModel{ () }
 \begin{HIRAttributes}
@@ -128,7 +126,7 @@ The {\tt DimensionInterval} defines an interval on a dimension.
 \end{lstlisting}
 
 \begin{HIRChildElements}
-	\HIRElementDef{DimensionPositionPlaceholder}
+	\HIRElementDef{DimensionLevel}
 	{position placeholder on a dimension that defines the begin and end of the interval}{R}
 \end{HIRChildElements}
 
@@ -147,11 +145,11 @@ The {\tt FieldDecl} element defines a multidimensional field storage
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default]
-(^\concept{Type}^,^\concept{Dimension}^+)
+(^\concept{Type}^,^\concept{GridDimension}^+)
 \end{lstlisting}
 
 \begin{HIRChildElements}
-	\HIRElementDef{Dimension}
+	\HIRElementDef{GridDimension}
 	{dimensions of the multidimensional space where the storage is defined}{R}
 	\HIRElementDef{Type}
 	{value type of the grid elements of the field}{R}	
@@ -164,16 +162,16 @@ The {\tt FieldDecl} element defines a multidimensional field storage
 
 
 \element{Offset}
-The {\tt Offset} is the relative distance in a given \concept{Dimension} to a neighbor grid point.
+The {\tt Offset} is the relative distance in a given \concept{GridDimension} to a neighbor grid point.
 
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default]
-(^\concept{Dimension}^)
+(^\concept{GridDimension}^)
 \end{lstlisting}
 
 \begin{HIRChildElements}
-	\HIRElementDef{Dimension}
+	\HIRElementDef{GridDimension}
 	{Identifies the dimension where the offset is computed}{R}
 \end{HIRChildElements}
 
@@ -183,16 +181,16 @@ The {\tt Offset} is the relative distance in a given \concept{Dimension} to a ne
 \end{HIRAttributes}
 
 \element{Computation}
-The {\tt Computation} defines an iteration loop over the specified \concept{Dimension}s of the domain. 
+The {\tt Computation} defines an iteration loop over the specified \concept{GridDimension}s of the domain. 
 
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default]
-((^\concept{Dimension}^|^\concept{DimensionInterval}^)[dimension]+,(^\concept{BlockStmt}^))
+((^\concept{GridDimension}^|^\concept{DimensionInterval}^)[dimension]+,(^\concept{BlockStmt}^))
 \end{lstlisting}
 
 \begin{HIRChildElements}
-	\HIRElementDef{Dimension[dimension]}
+	\HIRElementDef{GridDimension[dimension]}
 	{Specifies the dimensions where the computation is defined, 
 		convering the whole extent of the grid for that dimension}{O}
 	\HIRElementDef{DimensionInterval[dimension]}
