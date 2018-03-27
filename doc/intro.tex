@@ -12,3 +12,13 @@ There are two scopes:
 	\item {\tt control\_flow} defines the scope of nodes where one or more of the parallel dimensions of the \concept{Domain} are not yet resolved within a \concept{Computation}
 	\item {\tt domain\_computation} is the scope of nodes where all the parallel dimensions of the \concept{Domain} are resolved within a \concept{Computation}
 \end{enumerate}
+
+The {\bf ContentsModel} section of each node describes, using regular expression, that supported children nodes. 
+Some of the children are named nodes in order to identify in the specification of the node. The following example shows
+a node with two children, identified by {\tt lhs} and {\tt rhs}, where the {\tt rhs} can be either a \concept{FieldAccess} or a  \concept{Literal}
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(^\concept{FieldAccess}^[lhs], (^\concept{FieldAccess}^|^\concept{Literal}^)[rhs])
+\end{lstlisting}
