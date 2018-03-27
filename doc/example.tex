@@ -3,34 +3,37 @@
 \begin{lstlisting}[style=default]
 Program {
   dimension : [ncol, nlay, ngpt]
-  Domain {
+  domain : Domain {
     parallel_domain_dim : ncol
     vertical_dim : nlay
     parallel_dim : ngpt
   },
   field : FieldDecl {
-    name : mu0, dimensions : [ncol]
+    name : mu0, Dimension : [ncol]
   }
   field : FieldDecl {
-    name : tau, dimensions : [ncol, nlay, ngpt]
+    name : tau, Dimension : [ncol, nlay, ngpt]
   }
   field : FieldDecl {
-    name : w0, dimensions : [ncol,nlay, ngpt]
+    name : w0, Dimension : [ncol,nlay, ngpt]
   }
   field : FieldDecl {
-    name : g, dimensions : [ncol,nlay, ngpt]
+    name : g, Dimension : [ncol,nlay, ngpt]
   }
   field : FieldDecl {
-    name : Rdif, dimensions : [ncol,nlay]
+    name : Rdif, Dimension : [ncol,nlay]
   }
   field : FieldDecl {
-    name : Tdif, dimensions : [ncol,nlay]
+    name : Tdif, Dimension : [ncol,nlay]
   }
   field : FieldDecl {
-    name : Rdif, dimensions : [ncol,nlay]
+    name : Rdir, Dimension : [ncol,nlay]
   }
   field : FieldDecl {
-    name : Tnoscat, dimensions : [ncol,nlay]
+    name : Tdir, Dimension : [ncol,nlay]
+  }
+  field : FieldDecl {
+    name : Tnoscat, Dimension : [ncol,nlay]
   }
   vararg : VarArg {
     type : int
@@ -106,67 +109,70 @@ Program {
       name : k_gamma4
     }
 
-    // Computataion, this is the only stmt that we will express as a tree. 
-    // From this on, pseudocode for the statements will be used
-    ExprStmt { 
-      AssignmentOp {
-        lhs : VarAccess {
-          name : mu0_inv
-        }
-        rhs : BinaryOp {
-          lhs : Literal {
-            type : real
-            value : 1.0
+    BlockStmt {
+      // Computation, this is the only stmt that we will express as a tree. 
+      // From this on, pseudocode for the statements will be used
+      ExprStmt { 
+        AssignmentOp {
+          lhs : VarAccess {
+            name : mu0_inv
           }
-          rhs : VarAccess {
-            name : mu0
+          rhs : BinaryOp {
+            lhs : Literal {
+              type : real
+              value : 1.0
+            }
+            rhs : VarAccess {
+              name : mu0
+            }
+            operator : /
           }
-          operator : /
-        }
-      }
-    }
-    Computation {
-      dimension : ngpt
-      dimension : ncol
-      dimension : DimensionInterval {
-        dimension : nlay
-        DimensionLevel {
-          var : VarAccess { 
-            VarDecl { nlaybounds }
-            Literal {0}
-          }
-          offset : 0
-        }
-        DimensionLevel {
-          VarAccess { 
-            VarDecl { nlaybounds }
-            Literal {1}
-          }
-          offset : 0
         }
       }
-      BlockStmt {
-        gamma1 = (8._wp - w0(j,igpt) * (5._wp + 3._wp * g(j,igpt))) * .25_wp
-        gamma2 =  3._wp *(w0(j,igpt) * (1._wp -         g(j,igpt))) * .25_wp
-        gamma3 = (2._wp - 3._wp * mu0 *                 g(j,igpt) ) * .25_wp
-        gamma4 =  1._wp - gamma3
-        alpha1 = gamma1 * gamma4 + gamma2 * gamma3           ! Eq. 16
-        alpha2 = gamma1 * gamma3 + gamma2 * gamma4           ! Eq. 17
-        k = sqrt(max((gamma1 - gamma2) * (gamma1 + gamma2), 1.e-12_wp))
-        exp_minusktau = exp(-tau(j,igpt)*k)
-        exp_minus2ktau = exp_minusktau * exp_minusktau
-        RT_term = 1._wp / (k      * (1._wp + exp_minus2ktau)  + gamma1 * (1._wp - exp_minus2ktau) )
-        Rdif(j,igpt) = RT_term * gamma2 * (1._wp - exp_minus2ktau)
-        Tdif(j,igpt) = RT_term * 2._wp * k * exp_minusktau
-        Tnoscat(j,igpt) = exp(-tau(j,igpt)*mu0_inv)
-        k_mu     = k * mu0
-        k_gamma3 = k * gamma3
-        k_gamma4 = k * gamma4
-        RT_term =  w0(j,igpt) * RT_term/merge(1._wp - k_mu*k_mu, epsilon(1._wp), abs(1._wp - k_mu*k_mu) >= epsilon(1._wp))
-        Rdir(j,igpt) = RT_term  * ((1._wp - k_mu) * (alpha2 + k_gamma3) -  (1._wp + k_mu) * (alpha2 - k_gamma3) * exp_minus2ktau - 2.0_wp * (k_gamma3 - alpha2 * k_mu)  * exp_minusktau  * Tnoscat(j,igpt))
-        Tdir(j,igpt) = Tnoscat(j,igpt) - RT_term * ((1._wp + k_mu) * (alpha1 + k_gamma4) * Tnoscat(j,igpt) - (1._wp - k_mu) * (alpha1 - k_gamma4) * exp_minus2ktau * Tnoscat(j,igpt) - 2.0_wp * (k_gamma4 + alpha1 * k_mu)  * exp_minusktau)
-        Tdir(j,igpt) = Tdir(j,igpt) - Tnoscat(j,igpt)
-      }   
+      Computation {
+        dimension : ngpt
+        dimension : ncol
+        dimension : DimensionInterval {
+          dimension : nlay
+          DimensionLevel {
+            var_placeholder : VarAccess { 
+              VarDecl { nlaybounds }
+              Literal {0}
+            }
+            offset : 0
+          }
+          DimensionLevel {
+            var_placeholder : VarAccess { 
+              VarDecl { nlaybounds }
+              Literal {1}
+            }
+            offset : 0
+          }
+        }
+        BlockStmt {
+          gamma1 = (8._wp - w0 * (5._wp + 3._wp * g)) * .25_wp
+          gamma2 =  3._wp *(w0 * (1._wp - g) * .25_wp
+          gamma3 = (2._wp - 3._wp * mu0 * g ) * .25_wp
+          gamma4 =  1._wp - gamma3
+          alpha1 = gamma1 * gamma4 + gamma2 * gamma3 
+          alpha2 = gamma1 * gamma3 + gamma2 * gamma4 
+          k = sqrt(max((gamma1 - gamma2) * (gamma1 + gamma2), 1.e-12_wp))
+          exp_minusktau = exp(-tau * k)
+          exp_minus2ktau = exp_minusktau * exp_minusktau
+          RT_term = 1._wp / (k * (1._wp + exp_minus2ktau)  + gamma1 * (1._wp - exp_minus2ktau) )
+          Rdif = RT_term * gamma2 * (1._wp - exp_minus2ktau)
+          Tdif = RT_term * 2._wp * k * exp_minusktau
+          Tnoscat = exp(-tau * mu0_inv)
+          k_mu     = k * mu0
+          k_gamma3 = k * gamma3
+          k_gamma4 = k * gamma4
+          RT_term =  w0 * RT_term/merge(1._wp - k_mu*k_mu, epsilon(1._wp), abs(1._wp - k_mu*k_mu) >= epsilon(1._wp))
+          Rdir = RT_term  * ((1._wp - k_mu) * (alpha2 + k_gamma3) -  (1._wp + k_mu) * (alpha2 - k_gamma3) * exp_minus2ktau - 2.0_wp * (k_gamma3 - alpha2 * k_mu)  * exp_minusktau  * Tnoscat)
+          Tdir = Tnoscat - RT_term * ((1._wp + k_mu) * (alpha1 + k_gamma4) * Tnoscat - (1._wp - k_mu) * (alpha1 - k_gamma4) * exp_minus2ktau * Tnoscat - 2.0_wp * (k_gamma4 + alpha1 * k_mu)  * exp_minusktau)
+          Tdir -= Tnoscat
+        }   
+      }
     }
-
+  }
+}
 \end{lstlisting}
