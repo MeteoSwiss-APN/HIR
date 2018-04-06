@@ -57,12 +57,3 @@ The {\tt BlockStmt} is a statement element that defines an block (of statements)
 	\HIRElementDef{Stmt}
 	{sequence of statements that compose the {\tt block} computation}{R}
 \end{HIRChildElements}
-
-\element{Stmt}
-The {\tt Stmt} is an alias element to any element that is a statement.
-
-\subsubsection*{ContentsModel}{}
-
-\begin{lstlisting}[style=default]
-(^\concept{VarDecl}^|^\concept{IfStmt}^|^\concept{BlockStmt}^|^\concept{IfStmt}^|^\concept{ExprStmt}^)
-\end{lstlisting}
