@@ -5,11 +5,16 @@
 \def\DDAG{$^\ddagger$}
 %
 \newcommand{\concept}[1]{
-\hyperref[cp:#1]{#1}	
+\hyperref[cp:#1]{#1}
 }
 
 \newcommand{\element}[1] {
 \subsection{{\tt #1} element}
+\label{cp:#1}
+}
+
+\newcommand{\model}[1] {
+\subsection{{\tt #1} model}
 \label{cp:#1}
 }
 

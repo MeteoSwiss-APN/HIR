@@ -7,7 +7,7 @@ Description of the element {\tt Program} element:
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default]
-(^\concept{Dimension}^[dimension]+,^\concept{Domain}^[domain], ^\concept{FieldDecl}^[field]+, ^\concept{VarDecl}^[vararg]*, (^\concept{ScopedProgram}^|^\concept{ExternalKernel}^)[scope]+)
+(^\concept{GridDimension}^[dimension]+,^\concept{Domain}^[domain], ^\concept{FieldDecl}^[field]+, ^\concept{VarDecl}^[vararg]*, (^\concept{ScopedProgram}^|^\concept{ExternalKernel}^)[scope]+)
 \end{lstlisting}
 
 \begin{HIRChildElements}
@@ -54,7 +54,7 @@ The domain provides domain information of the application that is used as hints 
 	\HIRElementDef{vertical\_dim}
 	{specifies the vertical dimension}{R}
 	\HIRElementDef{parallel\_dim}
-	{specifies dimensions on which computations are embarrassingly parallel}{R}	
+	{specifies dimensions on which computations are embarrassingly parallel}{R}
 \end{HIRChildElements}
 
 \element{ScopedProgram}
@@ -68,7 +68,7 @@ The {\tt ScopedProgram} defines all the computations performed using concepts of
 \end{lstlisting}
 
 \begin{HIRChildElements}
-	\HIRElementDef{Stmt}
+	\HIRElementDef{BlockStmt}
 	{Block statement containing the sequence of statements that forms the computation of the program}{R}
 \end{HIRChildElements}
 
@@ -87,12 +87,12 @@ The {\tt ExternalKernel} defines a call to an external kernel, for which computa
 	{defines the list of input fields}{R}
 	\HIRElementDef{output}
 	{defines the list of output fields}{R}
-		
+
 \end{HIRChildElements}
 
 \element{GridDimension}
 
-The {\tt GridDimension} elements defines a dimension of a multidimensional space where fields are discretized and over which \concept{Computation}s iterate. 
+The {\tt GridDimension} elements defines a dimension of a multidimensional space where fields are discretized and over which \concept{Computation}s iterate.
 
 \HIRContentsModel{ () }
 \begin{HIRAttributes}
@@ -114,12 +114,12 @@ The {\tt DimensionLevel} it is used to specify a position (that is specified as 
 	\HIRElementDef{var\_placeholder}
 	{It uses a scalar variable of rank N where each element act as a marker, whose runtime values will store the positions within the extent of the dimension.}{R}
 	\HIRElementDef{offset}
-	{It is a integer offset that shifts the position of the level with respect to the value of the var\_placeholder }{R}	
+	{It is a integer offset that shifts the position of the level with respect to the value of the var\_placeholder }{R}
 \end{HIRChildElements}
 
 \element{DimensionInterval}
 
-The {\tt DimensionInterval} defines an interval on a dimension. 
+The {\tt DimensionInterval} defines an interval on a dimension.
 
 \subsubsection*{ContentsModel}{}
 
@@ -154,7 +154,7 @@ The {\tt FieldDecl} element defines a multidimensional field storage
 	\HIRElementDef{GridDimension}
 	{dimensions of the multidimensional space where the storage is defined}{R}
 	\HIRElementDef{Type}
-	{value type of the grid elements of the field}{R}	
+	{value type of the grid elements of the field}{R}
 \end{HIRChildElements}
 
 \begin{HIRAttributes}
@@ -183,7 +183,7 @@ The {\tt Offset} is the relative distance in a given \concept{GridDimension} to 
 \end{HIRAttributes}
 
 \element{Computation}
-The {\tt Computation} defines an iteration loop over the specified \concept{GridDimension}s of the domain. 
+The {\tt Computation} defines an iteration loop over the specified \concept{GridDimension}s of the domain.
 
 \subsubsection*{ContentsModel}{}
 
@@ -193,7 +193,7 @@ The {\tt Computation} defines an iteration loop over the specified \concept{Grid
 
 \begin{HIRChildElements}
 	\HIRElementDef{GridDimension[dimension]}
-	{Specifies the dimensions where the computation is defined, 
+	{Specifies the dimensions where the computation is defined,
 		convering the whole extent of the grid for that dimension}{O}
 	\HIRElementDef{DimensionInterval[dimension]}
 	{Provides a specific range on a dimension to iterate over}{O}
@@ -216,7 +216,7 @@ The {\tt BoundaryCondition} defines the strategy to apply a boundary condition t
 	{field subject of boundary condition}{R}
 	\HIRElementDef{BlockStmt}
 	{BlockStmt with statement that implement the boundary condition computation}{R}
-		
+
 \end{HIRChildElements}
 
 \begin{HIRAttributes}

@@ -22,7 +22,7 @@ The {\tt VarDecl} represents a N-dimensional scalar.
 \end{HIRAttributes}
 
 \element{IfStmt}
-The {\tt IfStmt} is a statement element that defines an if condition. 
+The {\tt IfStmt} is a statement element that defines an if condition.
 
 \subsubsection*{ContentsModel}{}
 
@@ -45,33 +45,15 @@ else
 \end{HIRChildElements}
 
 \element{BlockStmt}
-The {\tt BlockStmt} is a statement element that defines an block (of statements). 
+The {\tt BlockStmt} is a statement element that defines an block (of statements).
 
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default]
-(^\concept{Stmt}^+)
+(^\concept{stmtModel}^+)
 \end{lstlisting}
 
 \begin{HIRChildElements}
-	\HIRElementDef{Stmt}
+	\HIRElementDef{stmtModel}
 	{sequence of statements that compose the {\tt block} computation}{R}
 \end{HIRChildElements}
-
-\element{Stmt}
-The {\tt Stmt} is an alias element to any element that is a statement. 
-
-\subsubsection*{ContentsModel}{}
-
-\begin{lstlisting}[style=default]
-(^\concept{VarDecl}^|^\concept{IfStmt}^|^\concept{BlockStmt}^|^\concept{IfStmt}^|^\concept{ExprStmt}^)
-\end{lstlisting}
-
-\element{ExprStmt}
-The {\tt ExprStmt} is a statement made by an expression
-
-\subsubsection*{ContentsModel}{}
-
-\begin{lstlisting}[style=default]
-(^\concept{UnaryOp}^|^\concept{TernaryOp}^|^\concept{AssignmentOp}^)
-\end{lstlisting}
