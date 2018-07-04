@@ -119,12 +119,12 @@ Program {
           name : mu0_inv
         }
         rhs : BinaryOp {
-          lhs : Literal {
+          lhs : VarAccess {
+            name : mu0
+          }
+          rhs : Literal {
             type : real
             value : 1.0
-          }
-          rhs : VarAccess {
-            name : mu0
           }
           operator : /
         }
