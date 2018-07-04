@@ -2,7 +2,7 @@
 
 \element{Literal}
 
-The {\tt Literal} defines the specification of a literal. 
+The {\tt Literal} defines the specification of a literal.
 \HIRContentsModel{ (Type) }
 
 \begin{HIRChildElements}
@@ -14,35 +14,6 @@ The {\tt Literal} defines the specification of a literal.
 	\HIRAttrDef{value}{string}
 	{value of the literal}{R}
 \end{HIRAttributes}
-
-\element{AssignmentOp}
-
-The {\tt AssignmentOp} defines an assignment operation expression. 
-
-\subsubsection*{ContentsModel}{}
-
-\begin{lstlisting}[style=default]
-(Expr[lhs], Expr[rhs])
-
-where if (scope == domain_computation)
-
-[lhs] = (^\concept{VarDecl}^|^\concept{VarAccess}^|^\concept{FieldAccess}^),
-[rhs] =	(^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{Literal}^|^\concept{FieldAccess}^)
-
-else
-
-[lhs] = (^\concept{VarDecl}^|^\concept{VarAccess}^)
-[rhs] =	(^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{Literal}^)
-\end{lstlisting}
-
-
-\begin{HIRChildElements}
-	\HIRElementDef{[lhs]}
-	{left hand side expression of the binary operator}{R}
-	\HIRElementDef{[rhs]}
-	{right hand side expression of the binary operator}{R}
-\end{HIRChildElements}
-
 
 \element{BinaryOp}
 
@@ -176,7 +147,3 @@ The {\tt FieldAccess} is a expression that defines an access to a field
 	\HIRElementDef{Offset}
 	{An offset (relative to current grid position) used to de-reference the field access}{O}
 \end{HIRChildElements}
-
-
-
- 

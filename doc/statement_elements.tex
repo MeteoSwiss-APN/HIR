@@ -22,7 +22,7 @@ The {\tt VarDecl} represents a N-dimensional scalar.
 \end{HIRAttributes}
 
 \element{IfStmt}
-The {\tt IfStmt} is a statement element that defines an if condition. 
+The {\tt IfStmt} is a statement element that defines an if condition.
 
 \subsubsection*{ContentsModel}{}
 
@@ -45,7 +45,7 @@ else
 \end{HIRChildElements}
 
 \element{BlockStmt}
-The {\tt BlockStmt} is a statement element that defines an block (of statements). 
+The {\tt BlockStmt} is a statement element that defines an block (of statements).
 
 \subsubsection*{ContentsModel}{}
 
@@ -59,7 +59,7 @@ The {\tt BlockStmt} is a statement element that defines an block (of statements)
 \end{HIRChildElements}
 
 \element{Stmt}
-The {\tt Stmt} is an alias element to any element that is a statement. 
+The {\tt Stmt} is an alias element to any element that is a statement.
 
 \subsubsection*{ContentsModel}{}
 
@@ -73,5 +73,34 @@ The {\tt ExprStmt} is a statement made by an expression
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default]
-(^\concept{UnaryOp}^|^\concept{TernaryOp}^|^\concept{AssignmentOp}^)
+(^\concept{UnaryOp}^|^\concept{TernaryOp}^|^\concept{AssignmentStmt}^)
 \end{lstlisting}
+
+
+\element{AssignmentStmt}
+
+The {\tt AssignmentStmt} defines an assignment operation expression.
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default]
+(Expr[lhs], Expr[rhs])
+
+where if (scope == domain_computation)
+
+[lhs] = (^\concept{VarDecl}^|^\concept{VarAccess}^|^\concept{FieldAccess}^),
+[rhs] =	(^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{Literal}^|^\concept{FieldAccess}^)
+
+else
+
+[lhs] = (^\concept{VarDecl}^|^\concept{VarAccess}^)
+[rhs] =	(^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{Literal}^)
+\end{lstlisting}
+
+
+\begin{HIRChildElements}
+	\HIRElementDef{[lhs]}
+	{left hand side expression of the binary operator}{R}
+	\HIRElementDef{[rhs]}
+	{right hand side expression of the binary operator}{R}
+\end{HIRChildElements}
