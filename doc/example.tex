@@ -114,21 +114,19 @@ Program {
     BlockStmt {
       // Computation, this is the only stmt that we will express as a tree. 
       // From this on, pseudocode for the statements will be used
-      ExprStmt { 
-        AssignmentOp {
+      AssignmentOp {
+        lhs : VarAccess {
+          name : mu0_inv
+        }
+        rhs : BinaryOp {
           lhs : VarAccess {
-            name : mu0_inv
+            name : mu0
           }
-          rhs : BinaryOp {
-            lhs : Literal {
-              type : real
-              value : 1.0
-            }
-            rhs : VarAccess {
-              name : mu0
-            }
-            operator : /
+          rhs : Literal {
+            type : real
+            value : 1.0
           }
+          operator : /
         }
       }
       Computation {
