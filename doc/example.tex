@@ -2,50 +2,50 @@
 
 \begin{lstlisting}[style=default]
 Program {
-  dimension : GridDimension {[ncol, nlay, ngpt]}
-  domain : Domain {
+  GridDimension {[ncol, nlay, ngpt]}
+  Domain {
     parallel_domain_dim : ncol
     vertical_dim : nlay
     parallel_dim : ngpt
   },
-  field : FieldDecl {
+  FieldDecl {
     name : mu0, GridDimension {[ncol]}
   }
-  field : FieldDecl {
+  FieldDecl {
     name : tau, GridDimension {[ncol, nlay, ngpt]}
   }
-  field : FieldDecl {
+  FieldDecl {
     name : w0, GridDimension {[ncol,nlay, ngpt]}
   }
-  field : FieldDecl {
+  FieldDecl {
     name : g, GridDimension {[ncol,nlay, ngpt]}
   }
-  field : FieldDecl {
+  FieldDecl {
     name : Rdif, GridDimension {[ncol,nlay]}
   }
-  field : FieldDecl {
+  FieldDecl {
     name : Tdif, GridDimension {[ncol,nlay]}
   }
-  field : FieldDecl {
+  FieldDecl {
     name : Rdir, GridDimension {[ncol,nlay]}
   }
-  field : FieldDecl {
+  FieldDecl {
     name : Tdir, GridDimension {[ncol,nlay]}
   }
-  field : FieldDecl {
+  FieldDecl {
     name : Tnoscat, GridDimension {[ncol,nlay]}
   }
-  vararg : VarDecl {
+  VarDecl {
     type : int
     name : ncolbounds
     isarg : true
   }
-  vararg : VarDecl {
+  VarDecl {
     type : int
     name : nlaybounds
     isarg : true
   }  
-  scope : ScopedProgram {
+  ScopedProgram {
     // two_stream (Missing arg list, name of what is called, shouldn't inline stuff at this point)
     // adding_sw (same as up)
     // additional_step (same as up)
@@ -114,35 +114,34 @@ Program {
     BlockStmt {
       // Computation, this is the only stmt that we will express as a tree. 
       // From this on, pseudocode for the statements will be used
-      AssignmentOp {
-        lhs : VarAccess {
+      AssignmentStmt {
+        VarAccess {
           name : mu0_inv
         }
-        rhs : BinaryOp {
-          lhs : VarAccess {
+        divOp {
+          VarAccess {
             name : mu0
           }
-          rhs : Literal {
+          Literal {
             type : real
             value : 1.0
           }
-          operator : /
         }
       }
       Computation {
-        dimension : ngpt
-        dimension : ncol
-        dimension : DimensionInterval {
-          dimension : nlay
+        GridDimension : ngpt
+        GridDimension : ncol
+        DimensionInterval {
+          GridDimension : nlay
           DimensionLevel {
-            var_placeholder : VarAccess { 
+            VarAccess { 
               VarDecl { nlaybounds }
               Literal {0}
             }
             offset : 0
           }
           DimensionLevel {
-            var_placeholder : VarAccess { 
+            VarAccess { 
               VarDecl { nlaybounds }
               Literal {1}
             }
@@ -150,26 +149,88 @@ Program {
           }
         }
         BlockStmt {
-          gamma1 = (8._wp - w0 * (5._wp + 3._wp * g)) * .25_wp
-          gamma2 =  3._wp *(w0 * (1._wp - g) * .25_wp
-          gamma3 = (2._wp - 3._wp * mu0 * g ) * .25_wp
-          gamma4 =  1._wp - gamma3
-          alpha1 = gamma1 * gamma4 + gamma2 * gamma3 
-          alpha2 = gamma1 * gamma3 + gamma2 * gamma4 
-          k = sqrt(max((gamma1 - gamma2) * (gamma1 + gamma2), 1.e-12_wp))
-          exp_minusktau = exp(-tau * k)
-          exp_minus2ktau = exp_minusktau * exp_minusktau
-          RT_term = 1._wp / (k * (1._wp + exp_minus2ktau)  + gamma1 * (1._wp - exp_minus2ktau) )
-          Rdif = RT_term * gamma2 * (1._wp - exp_minus2ktau)
-          Tdif = RT_term * 2._wp * k * exp_minusktau
-          Tnoscat = exp(-tau * mu0_inv)
-          k_mu     = k * mu0
-          k_gamma3 = k * gamma3
-          k_gamma4 = k * gamma4
-          RT_term =  w0 * RT_term/merge(1._wp - k_mu*k_mu, epsilon(1._wp), abs(1._wp - k_mu*k_mu) >= epsilon(1._wp))
-          Rdir = RT_term  * ((1._wp - k_mu) * (alpha2 + k_gamma3) -  (1._wp + k_mu) * (alpha2 - k_gamma3) * exp_minus2ktau - 2.0_wp * (k_gamma3 - alpha2 * k_mu)  * exp_minusktau  * Tnoscat)
-          Tdir = Tnoscat - RT_term * ((1._wp + k_mu) * (alpha1 + k_gamma4) * Tnoscat - (1._wp - k_mu) * (alpha1 - k_gamma4) * exp_minus2ktau * Tnoscat - 2.0_wp * (k_gamma4 + alpha1 * k_mu)  * exp_minusktau)
-          Tdir -= Tnoscat
+          AssignmentStmt {
+            VarAccess {
+              name : gamma1
+            }
+            mulOp {
+              minusOp {
+                Literal { 8.0 }
+                mulOp {
+                  VarAccess { name : w0 }
+                  addOp {
+                    Literal { 5.0 }
+                    mulOp {
+                      Literal { 3.0 }
+                      VarAccess { name : g }
+                    }
+                  }
+                }
+              }
+              Literal { 0.25 }
+            }
+            lineno : 654
+            file : sw_solver.f90
+          }
+          AssignmentStmt {
+            VarAccess { name : gamma2}
+            mulOp {
+              Literal { 3.0 }
+              mulOp {
+                mulOp {
+                  VarAccess { name : w0 }
+                  minusOp {
+                    Literal { 1.0 }
+                    VarAccess { name : g }
+                  }
+                }
+                Literal { 0.25 }
+              }
+            }
+            lineno : 655
+            file : sw_solver.f90
+          }
+          AssignmentStmt {
+            VarAccess { name : gamma3 }
+            mulOp {
+              minusOp {
+                Literal { 2.0 }
+                mulOp {
+                  mulOp {
+                    Literal { 3.0 }
+                    VarAccess { name : mu0 }
+                  }
+                  VarAccess { name : g }
+                }                  
+              }
+              Literal { 0.25 }
+            }
+          }
+          AssignmentStmt {
+            VarAccess { name : gamma4 }
+            minusOp {
+              Literal { 1.0 }
+              VarAccess { name : gamma3 }
+            }
+          }
+
+          % Rest of the program not represented as HIR
+          % alpha1 = gamma1 * gamma4 + gamma2 * gamma3 
+          % alpha2 = gamma1 * gamma3 + gamma2 * gamma4 
+          % k = sqrt(max((gamma1 - gamma2) * (gamma1 + gamma2), 1.e-12_wp))
+          % exp_minusktau = exp(-tau * k)
+          % exp_minus2ktau = exp_minusktau * exp_minusktau
+          % RT_term = 1._wp / (k * (1._wp + exp_minus2ktau)  + gamma1 * (1._wp - exp_minus2ktau) )
+          % Rdif = RT_term * gamma2 * (1._wp - exp_minus2ktau)
+          % Tdif = RT_term * 2._wp * k * exp_minusktau
+          % Tnoscat = exp(-tau * mu0_inv)
+          % k_mu     = k * mu0
+          % k_gamma3 = k * gamma3
+          % k_gamma4 = k * gamma4
+          % RT_term =  w0 * RT_term/merge(1._wp - k_mu*k_mu, epsilon(1._wp), abs(1._wp - k_mu*k_mu) >= epsilon(1._wp))
+          % Rdir = RT_term  * ((1._wp - k_mu) * (alpha2 + k_gamma3) -  (1._wp + k_mu) * (alpha2 - k_gamma3) * exp_minus2ktau - 2.0_wp * (k_gamma3 - alpha2 * k_mu)  * exp_minusktau  * Tnoscat)
+          % Tdir = Tnoscat - RT_term * ((1._wp + k_mu) * (alpha1 + k_gamma4) * Tnoscat - (1._wp - k_mu) * (alpha1 - k_gamma4) * exp_minus2ktau * Tnoscat - 2.0_wp * (k_gamma4 + alpha1 * k_mu)  * exp_minusktau)
+          % Tdir -= Tnoscat
         }   
       }
     }

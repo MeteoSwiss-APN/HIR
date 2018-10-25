@@ -17,7 +17,16 @@ The {\tt Literal} defines the specification of a literal.
 
 \element{BinaryOp}
 
-The {\tt BinaryOp} defines an binary operator expression.
+The elements representing binary operators are described below: 
+
+\begin{tabular}{|l|p{4cm}|l|}
+	\hline
+	 element & operator & operation \\ \hline\hline
+	 {\tt plusOp} & + & addition \\ \hline 
+	 {\tt minusOp} & - & subtraction \\ \hline 
+	 {\tt mulOp} & * & multiplication \\ \hline 
+	 {\tt divOp} & / & division \\ \hline 
+\end{tabular}
 
 \subsubsection*{ContentsModel}{}
 
@@ -32,14 +41,19 @@ The {\tt BinaryOp} defines an binary operator expression.
 	 expression as the second operand. Refer to \concept{exprModel}.}{R}
 \end{HIRChildElements}
 
-\begin{HIRAttributesVal}
-	\HIRAttrValDef{operator}{string}
-	{operator being applied to the operands}{+,-,*,/}{R}
-\end{HIRAttributesVal}
 
 \element{UnaryOp}
 
-The {\tt UnaryOp} defines an unary operator expression.
+The elements representing binary operators are described below: 
+
+\begin{tabular}{|l|p{4cm}|l|}
+	\hline
+	 element & operator & operation \\ \hline\hline
+	 {\tt unaryMinus} & - & sign inversion \\ \hline 
+	 {\tt logNot} & ! & logical not \\ \hline 
+	 {\tt incrementOp} & ++ & increment by one \\ \hline 
+	 {\tt decrementOp} & -- & decrement by one \\ \hline 
+\end{tabular}
 
 \subsubsection*{ContentsModel}{}
 
@@ -51,11 +65,6 @@ The {\tt UnaryOp} defines an unary operator expression.
 	\HIRElementDef{exprModel}
 	{Specifies the operand expression. Refer to \concept{exprModel}}{R}
 \end{HIRChildElements}
-
-\begin{HIRAttributesVal}
-	\HIRAttrValDef{operator}{string}
-	{operator being applied to the operand}{+=,-=,*=,/=,++,--}{R}
-\end{HIRAttributesVal}
 
 \element{TernaryOp}
 
@@ -87,16 +96,18 @@ The {\tt VarAccess} is a expression that defines an access to a \concept{VarDecl
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default,frame=none]
-(^\concept{VarDecl}^,^\concept{Literal}^*)
+(^\concept{Literal}^*)
 \end{lstlisting}
 
 \begin{HIRChildElements}
-	\HIRElementDef{VarDecl}
-	{The var declaration that is being accessed in this expression}{R}
 	\HIRElementDef{Literal}
 	{access index of the var, when it is declared with more than 1 dimension}{O}
 \end{HIRChildElements}
 
+\begin{HIRAttributes}
+	\HIRAttrDef{name}{string}
+	{The var declaration that is being accessed in this expression}{R}
+\end{HIRAttributes}
 
 \element{FieldAccess}
 The {\tt FieldAccess} is a expression that defines an access to a field
