@@ -21,26 +21,15 @@ The {\tt BinaryOp} defines an binary operator expression.
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
-(Expr[lhs], Expr[rhs])
-
-where if (scope == domain_computation)
-
-[lhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
-[rhs] =	(^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
-
-else
-
-[lhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
-[rhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
+\begin{lstlisting}[style=default,frame=none]
+(exprModel, exprModel)
 \end{lstlisting}
 
 
 \begin{HIRChildElements}
-	\HIRElementDef{[lhs]}
-	{left hand side expression of the binary operator}{R}
-	\HIRElementDef{[rhs]}
-	{right hand side expression of the binary operator}{R}
+	\HIRElementDef{exprModel}
+	{Specifies the left-hand expression as the first operand, the right-hand 
+	 expression as the second operand. Refer to \concept{exprModel}.}{R}
 \end{HIRChildElements}
 
 \begin{HIRAttributesVal}
@@ -54,24 +43,13 @@ The {\tt UnaryOp} defines an unary operator expression.
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
-(Expr)
-
-where if (scope == domain_computation)
-
-[Expr] = (^\concept{VarDecl}^|^\concept{VarAccess}^|^\concept{FieldAccess}^),
-
-else
-
-[Expr] = (^\concept{VarDecl}^|^\concept{VarAccess}^|)
+\begin{lstlisting}[style=default,frame=none]
+(exprModel)
 \end{lstlisting}
 
-
 \begin{HIRChildElements}
-	\HIRElementDef{[lhs]}
-	{left hand side expression of the binary operator}{R}
-	\HIRElementDef{[rhs]}
-	{right hand side expression of the binary operator}{R}
+	\HIRElementDef{exprModel}
+	{Specifies the operand expression. Refer to \concept{exprModel}}{R}
 \end{HIRChildElements}
 
 \begin{HIRAttributesVal}
@@ -85,28 +63,16 @@ The {\tt TernaryOp} defines an ternary operator expression.
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
-(Expr[cond], Expr[lhs], Expr[rhs])
-
-where if (scope == domain_computation)
-[cond] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
-[lhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^),
-[rhs] =	(^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
-
-else
-
-[cond] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
-[lhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
-[rhs] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
+\begin{lstlisting}[style=default,frame=none]
+(exprModel, exprModel, exprModel)
 \end{lstlisting}
 
 \begin{HIRChildElements}
-	\HIRElementDef{[cond]}
-	{expression that defines the condition of the ternary operator}{R}
-	\HIRElementDef{[lhs]}
-	{left hand side expression of the binary operator}{R}
-	\HIRElementDef{[rhs]}
-	{right hand side expression of the binary operator}{R}
+	\HIRElementDef{exprModel}
+	{Sepcifies the condition of the operation as the first operand, the 
+	 left-hand expression of the ternary operation as the second 
+	 operand, the right-hand expression of the ternary operation as the third 
+	 operand. Refer to \concept{exprModel}.}{R}
 \end{HIRChildElements}
 
 \begin{HIRAttributes}
@@ -120,7 +86,7 @@ The {\tt VarAccess} is a expression that defines an access to a \concept{VarDecl
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
+\begin{lstlisting}[style=default,frame=none]
 (^\concept{VarDecl}^,^\concept{Literal}^*)
 \end{lstlisting}
 
@@ -137,7 +103,7 @@ The {\tt FieldAccess} is a expression that defines an access to a field
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
+\begin{lstlisting}[style=default,frame=none]
 (^\concept{FieldDecl}^,^\concept{Offset}^+)
 \end{lstlisting}
 
