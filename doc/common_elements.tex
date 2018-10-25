@@ -17,5 +17,34 @@ The {\tt exprModel} is commonly used for elements that refer expression.
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default,frame=none]
-(^\concept{UnaryOp}^|^\concept{TernaryOp}^|^\concept{AssignmentOp}^)
+where if (scope == domain_computation)    
+    (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{Literal}^|^\concept{FieldAccess}^|^\concept{VarAccess}^)
+else
+    (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
 \end{lstlisting}
+
+
+\model{lValueModel}
+The {\tt lValueModel} is commonly used for elements that refer left-hand side
+expression.
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default,frame=none]
+where if (scope == domain_computation)    
+    (^\concept{VarDecl}^|^\concept{VarAccess}^|^\concept{FieldAccess}^)
+else
+    (^\concept{VarDecl}^|^\concept{VarAccess}^)
+\end{lstlisting}
+
+
+
+\model{Common attributes}
+Some elements may have the following attributes. 
+\begin{HIRAttributes}
+    \HIRAttrDef{lineno}{text}
+    {Specifies the line number in the source program}{R}
+    \HIRAttrDef{file}{text}
+    {Specifies the source code file name}{R}
+\end{HIRAttributes}
+
