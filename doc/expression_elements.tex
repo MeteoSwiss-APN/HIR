@@ -26,6 +26,15 @@ The elements representing binary operators are described below:
 	 {\tt minusOp} & - & subtraction \\ \hline 
 	 {\tt mulOp} & * & multiplication \\ \hline 
 	 {\tt divOp} & / & division \\ \hline 
+	 {\tt powerOp} & ** & power \\ \hline 
+	 {\tt logicalAnd} & \&\& & logical AND \\ \hline 
+	 {\tt logicalOr} & || & logical OR \\ \hline 
+	 {\tt logicalEqual} & == & logical equality \\ \hline 
+	 {\tt logicalNotEqual} & != & logical unequality \\ \hline 
+	 {\tt logicalGt} & > & logical greater than \\ \hline 
+	 {\tt logicalLt} & < & logical less than \\ \hline 
+	 {\tt logicalGe} & >= & logical greater or equal than \\ \hline 
+	 {\tt logicalLe} & <= & logical less or equal than \\ \hline 
 \end{tabular}
 
 \subsubsection*{ContentsModel}{}
@@ -78,7 +87,7 @@ The {\tt TernaryOp} defines an ternary operator expression.
 
 \begin{HIRChildElements}
 	\HIRElementDef{exprModel}
-	{Sepcifies the condition of the operation as the first operand, the 
+	{Specifies the condition of the operation as the first operand, the 
 	 left-hand expression of the ternary operation as the second 
 	 operand, the right-hand expression of the ternary operation as the third 
 	 operand. Refer to \concept{exprModel}.}{R}
@@ -89,6 +98,24 @@ The {\tt TernaryOp} defines an ternary operator expression.
 	{operator being applied to the operands}{R}
 \end{HIRAttributes}
 
+\element{FctCall}
+Built-in function call for mathematical functions.
+
+
+\subsubsection*{ContentsModel}{}
+\begin{lstlisting}[style=default,frame=none]
+(exprModel+)
+\end{lstlisting}
+
+
+\begin{HIRChildElements}
+	\HIRElementDef{exprModel}{Arguments of the function call.}{R}
+\end{HIRChildElements}
+
+\begin{HIRAttributes}
+	\HIRAttrDef{name}{string}
+	{function name: (abs, sqrt, sin, cos, tan, asin, acos, atan, exp, log)}{R}
+\end{HIRAttributes}
 
 \element{VarAccess}
 The {\tt VarAccess} is a expression that defines an access to a \concept{VarDecl}
