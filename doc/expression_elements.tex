@@ -15,9 +15,10 @@ The {\tt Literal} defines the specification of a literal.
 	{value of the literal}{R}
 \end{HIRAttributes}
 
-\element{BinaryOp}
+\element{Binary operations}
 
-The elements representing binary operators are described below: 
+The elements representing binary operators are described below and follows the
+\concept{binaryOpModel}: 
 
 \begin{tabular}{|l|p{4cm}|l|}
 	\hline
@@ -36,19 +37,6 @@ The elements representing binary operators are described below:
 	 {\tt logicalGe} & >= & logical greater or equal than \\ \hline 
 	 {\tt logicalLe} & <= & logical less or equal than \\ \hline 
 \end{tabular}
-
-\subsubsection*{ContentsModel}{}
-
-\begin{lstlisting}[style=default,frame=none]
-(exprModel, exprModel)
-\end{lstlisting}
-
-
-\begin{HIRChildElements}
-	\HIRElementDef{exprModel}
-	{Specifies the left-hand expression as the first operand, the right-hand 
-	 expression as the second operand. Refer to \concept{exprModel}.}{R}
-\end{HIRChildElements}
 
 
 \element{UnaryOp}
