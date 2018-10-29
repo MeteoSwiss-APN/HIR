@@ -30,9 +30,9 @@ The {\tt IfStmt} is a statement element that defines an if condition.
 ( Condition, Then, Else? )
 
 where if (scope == domain_computation)
-Condition = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
+Condition = (^\concept{UnaryOp}^|^\concept{binaryOpModel}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
 else
-Condition = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
+Condition = (^\concept{UnaryOp}^|^\concept{binaryOpModel}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
 \end{lstlisting}
 
 \begin{HIRChildElements}
