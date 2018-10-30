@@ -6,22 +6,22 @@ Description of the element {\tt Program} element:
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
-(^\concept{GridDimension}^[dimension]+,^\concept{Domain}^[domain], ^\concept{FieldDecl}^[field]+, ^\concept{VarDecl}^[vararg]*, (^\concept{ScopedProgram}^|^\concept{ExternalKernel}^)[scope]+)
+\begin{lstlisting}[style=default,frame=none]
+(^\concept{GridDimension}^+,^\concept{Domain}^, ^\concept{FieldDecl}^+, ^\concept{VarDecl}^*, (^\concept{ScopedProgram}^|^\concept{ExternalKernel}^)+)
 \end{lstlisting}
 
 \begin{HIRChildElements}
-\HIRElementDef{dimension}
+\HIRElementDef{GridDimension}
 {Definition of all the dimensions used within the program}{R}
-\HIRElementDef{domain}
+\HIRElementDef{Domain}
 {specifies a domain that serves as hints to the compiler}{R}
-\HIRElementDef{field}
+\HIRElementDef{FieldDecl}
 {Definition of all the fields used by the program}{R}
-\HIRElementDef{vararg}
+\HIRElementDef{VarDecl}
 {Definition of scalar variables arguments to the program}{O}
-\HIRElementDef{ScopedProgram[scope]}
+\HIRElementDef{ScopedProgram}
 {a scoped program with computational patterns supported by the concepts of the HIR}{O}
-\HIRElementDef{ExternalKernek[scope]}
+\HIRElementDef{ExternalKernek}
 {describes a kernel that contains computational patterns non supported by the concepts of the HIR}{O}
 \end{HIRChildElements}
 
@@ -44,17 +44,20 @@ The domain provides domain information of the application that is used as hints 
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
-((^\concept{GridDimension}^[domain_parallel_dim])+, ^\concept{GridDimension}^[vertical_dim], (^\concept{GridDimension}^[parallel_dim])+
+\begin{lstlisting}[style=default,frame=none]
+( DomainParallelDimensions, VerticalDimension, ParallelDimensions )
 \end{lstlisting}
 
 \begin{HIRChildElements}
-	\HIRElementDef{domain\_parallel\_dim}
-	{specifies the dimensions over which the domain is parallelized}{R}
-	\HIRElementDef{vertical\_dim}
-	{specifies the vertical dimension}{R}
-	\HIRElementDef{parallel\_dim}
-	{specifies dimensions on which computations are embarrassingly parallel}{R}
+	\HIRElementDef{DomainParallelDimensions}
+	{list of of one or more \concept{GridDimension}+ representing the dimensions 
+	 over the domain is parallelized}{R}
+	\HIRElementDef{VerticalDimension}
+	{contains the \concept{GridDimension} element representing the vertical 
+	 dimension}{R}
+	\HIRElementDef{ParallelDimensions}
+	{list of \concept{GridDimension}* on which computations are embarrassingly 
+	 parallel}{R}
 \end{HIRChildElements}
 
 \element{ScopedProgram}
@@ -63,7 +66,7 @@ The {\tt ScopedProgram} defines all the computations performed using concepts of
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
+\begin{lstlisting}[style=default,frame=none]
 (^\concept{BlockStmt}^)
 \end{lstlisting}
 
@@ -78,16 +81,15 @@ The {\tt ExternalKernel} defines a call to an external kernel, for which computa
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
-(^\concept{FieldDecl}^[input]+, ^\concept{FieldDecl}^[output]+)
+\begin{lstlisting}[style=default,frame=none]
+( Inputs, Outputs)
 \end{lstlisting}
 
 \begin{HIRChildElements}
-	\HIRElementDef{input}
-	{defines the list of input fields}{R}
-	\HIRElementDef{output}
-	{defines the list of output fields}{R}
-
+	\HIRElementDef{Inputs}
+	{list of \concept{FieldDecl} that represents the input fields}{R}
+	\HIRElementDef{Outputs}
+	{list of \concept{FieldDecl} that represents the output fields}{R}
 \end{HIRChildElements}
 
 \element{GridDimension}
@@ -106,15 +108,15 @@ The {\tt DimensionLevel} it is used to specify a position (that is specified as 
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
-(^\concept{VarAccess}^[var_placeholder], ^\concept{Literal}^[offset])
+\begin{lstlisting}[style=default,frame=none]
+(^\concept{VarAccess}^, ^\concept{Literal}^)
 \end{lstlisting}
 
 \begin{HIRChildElements}
-	\HIRElementDef{var\_placeholder}
+	\HIRElementDef{VarAccess}
 	{It uses a scalar variable of rank N where each element act as a marker, whose runtime values will store the positions within the extent of the dimension.}{R}
-	\HIRElementDef{offset}
-	{It is a integer offset that shifts the position of the level with respect to the value of the var\_placeholder }{R}
+	\HIRElementDef{Literal}
+	{It is a integer offset that shifts the position of the level with respect to the value of the VarAccess }{R}
 \end{HIRChildElements}
 
 \element{DimensionInterval}
@@ -123,7 +125,7 @@ The {\tt DimensionInterval} defines an interval on a dimension.
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
+\begin{lstlisting}[style=default,frame=none]
 (^\concept{DimensionLevel}^,^\concept{DimensionLevel}^)
 \end{lstlisting}
 
@@ -146,7 +148,7 @@ The {\tt Type} defines the type of storage declarations
 The {\tt FieldDecl} element defines a multidimensional field storage
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
+\begin{lstlisting}[style=default,frame=none]
 (^\concept{Type}^,^\concept{GridDimension}^+)
 \end{lstlisting}
 
@@ -168,7 +170,7 @@ The {\tt Offset} is the relative distance in a given \concept{GridDimension} to 
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
+\begin{lstlisting}[style=default,frame=none]
 (^\concept{GridDimension}^)
 \end{lstlisting}
 
@@ -187,15 +189,15 @@ The {\tt Computation} defines an iteration loop over the specified \concept{Grid
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
-((^\concept{GridDimension}^|^\concept{DimensionInterval}^)[dimension]+,(^\concept{BlockStmt}^))
+\begin{lstlisting}[style=default,frame=none]
+((^\concept{GridDimension}^|^\concept{DimensionInterval}^)+,(^\concept{BlockStmt}^))
 \end{lstlisting}
 
 \begin{HIRChildElements}
-	\HIRElementDef{GridDimension[dimension]}
+	\HIRElementDef{GridDimension}
 	{Specifies the dimensions where the computation is defined,
 		convering the whole extent of the grid for that dimension}{O}
-	\HIRElementDef{DimensionInterval[dimension]}
+	\HIRElementDef{DimensionInterval}
 	{Provides a specific range on a dimension to iterate over}{O}
 	\HIRElementDef{BlockStmt}
 	{Specifies the block with the list of statements that form the computation}{R}
@@ -207,7 +209,7 @@ The {\tt BoundaryCondition} defines the strategy to apply a boundary condition t
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
+\begin{lstlisting}[style=default,frame=none]
 (^\concept{FieldDecl}^, ^\concept{BlockStmt}^)
 \end{lstlisting}
 
@@ -216,7 +218,6 @@ The {\tt BoundaryCondition} defines the strategy to apply a boundary condition t
 	{field subject of boundary condition}{R}
 	\HIRElementDef{BlockStmt}
 	{BlockStmt with statement that implement the boundary condition computation}{R}
-
 \end{HIRChildElements}
 
 \begin{HIRAttributes}

@@ -26,22 +26,24 @@ The {\tt IfStmt} is a statement element that defines an if condition.
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
-([cond], (^\concept{Stmt}^+)[then], (^\concept{Stmt}^+)[else])
+\begin{lstlisting}[style=default,frame=none]
+( Condition, Then, Else? )
 
 where if (scope == domain_computation)
-[cond] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
+Condition = (^\concept{unaryOpModel}^|^\concept{binaryOpModel}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^)
 else
-[cond] = (^\concept{UnaryOp}^|^\concept{BinaryOp}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
+Condition = (^\concept{unaryOpModel}^|^\concept{binaryOpModel}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
 \end{lstlisting}
 
 \begin{HIRChildElements}
-	\HIRElementDef{cond}
-	{expression that defines the condition of the if block}{R}
-	\HIRElementDef{then}
-	{sequence of statements that compose the {\tt then} computation of the block}{R}
-	\HIRElementDef{else}
-	{sequence of statements that compose the {\tt else} computation of the block}{O}
+	\HIRElementDef{Condition}
+	{contains expression that defines the condition of the if block}{R}
+	\HIRElementDef{Then}
+	{contains a sequence of \concept{stmtModel} that compose the {\tt then} 
+	 computation of the block}{R}
+	\HIRElementDef{Else}
+	{contains a sequence of \concept{stmtModel} that compose the {\tt Else} 
+	 computation of the block}{O}
 \end{HIRChildElements}
 
 \element{BlockStmt}
@@ -49,11 +51,32 @@ The {\tt BlockStmt} is a statement element that defines an block (of statements)
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
+\begin{lstlisting}[style=default,frame=none]
 (^\concept{stmtModel}^+)
 \end{lstlisting}
 
 \begin{HIRChildElements}
 	\HIRElementDef{stmtModel}
-	{sequence of statements that compose the {\tt block} computation}{R}
+	{statement that composes the {\tt block} computation}{R}
 \end{HIRChildElements}
+
+\element{AssignmentStmt}
+
+The {\tt AssignmentStmt} defines an assignment operation expression.
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default,frame=none]
+(^\concept{lValueModel}^, ^\concept{exprModel}^ )
+\end{lstlisting}
+
+
+\begin{HIRChildElements}
+	\HIRElementDef{lValueModel}
+	{Specifies the left-hand side expression. 
+	 Refer to \concept{lValueModel}.}{R}
+	\HIRElementDef{exprModel}
+	{Specifies the right-hand side expression. 
+	 Refer to \concept{exprModel}.}{R}
+\end{HIRChildElements}
+

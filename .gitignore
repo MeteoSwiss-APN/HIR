@@ -30,3 +30,20 @@
 *.exe
 *.out
 *.app
+
+# Latex intermediate files
+*.aux
+*.idx
+*.fdb_latexmk
+*.ilg
+*.ind
+*.lot
+*.pdf
+*.synctex.gz
+*.toc
+*.fls
+*.lof
+*.log
+
+# build dir
+build/**

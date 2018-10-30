@@ -6,7 +6,7 @@ The {\tt stmtModel} is commonly used for elements that refer statements.
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
+\begin{lstlisting}[style=default,frame=none]
 (^\concept{VarDecl}^|^\concept{IfStmt}^|^\concept{BlockStmt}^)
 \end{lstlisting}
 
@@ -16,6 +16,66 @@ The {\tt exprModel} is commonly used for elements that refer expression.
 
 \subsubsection*{ContentsModel}{}
 
-\begin{lstlisting}[style=default]
-(^\concept{UnaryOp}^|^\concept{TernaryOp}^|^\concept{AssignmentOp}^)
+\begin{lstlisting}[style=default,frame=none]
+where if (scope == domain_computation)    
+    (^\concept{unaryOpModel}^|^\concept{binaryOpModel}^|^\concept{TernaryOp}^|^\concept{Literal}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{FctCall}^)
+else
+    (^\concept{unaryOpModel}^|^\concept{binaryOpModel}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^|^\concept{FctCall}^)
 \end{lstlisting}
+
+
+\model{lValueModel}
+The {\tt lValueModel} is commonly used for elements that refer left-hand side
+expression.
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default,frame=none]
+where if (scope == domain_computation)    
+    (^\concept{VarDecl}^|^\concept{VarAccess}^|^\concept{FieldAccess}^)
+else
+    (^\concept{VarDecl}^|^\concept{VarAccess}^)
+\end{lstlisting}
+
+
+\model{binaryOpModel}
+The {\tt binaryOpModel} is used for elements that refer to binary operations.
+
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default,frame=none]
+(exprModel, exprModel)
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{exprModel}
+	{Specifies the left-hand expression as the first operand, the right-hand 
+	 expression as the second operand. Refer to \concept{exprModel}.}{R}
+\end{HIRChildElements}
+
+\model{unaryOpModel}
+The {\tt unaryOpModel} is used for elements that refer to unary operations.
+
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default,frame=none]
+(exprModel)
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{exprModel}
+	{Specifies the right-hand expression. Refer to \concept{exprModel}.}{R}
+\end{HIRChildElements}
+
+
+\model{Common attributes}
+Some elements may have the following attributes. 
+\begin{HIRAttributes}
+    \HIRAttrDef{lineno}{text}
+    {Specifies the line number in the source program}{R}
+    \HIRAttrDef{file}{text}
+    {Specifies the source code file name}{R}
+\end{HIRAttributes}
+
