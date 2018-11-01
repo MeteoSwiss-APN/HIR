@@ -8,10 +8,13 @@ The HIR package contains:
 https://github.com/MeteoSwiss-APN/HIR/tree/master/doc
 
 * A concrete implementation of the specification (using google protobuffers)
+
 https://github.com/MeteoSwiss-APN/HIR/blob/master/src/proto/HIR.proto
+
 Notice that the implementation is behind the latest version proposed in the doc folder
 
 * A python tool to traverse and operate on the .proto specification
+
 https://github.com/MeteoSwiss-APN/HIR/tree/master/src/python
 
 
