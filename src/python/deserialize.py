@@ -1,6 +1,7 @@
 import HIR_pb2
 import textwrap
 import sys
+import argparse 
 
 class deserializer:
   def __init__(self):
@@ -170,7 +171,7 @@ class deserializer:
 
     self.indent_+=2
     self.T_.initial_indent=' '*self.indent_
-    for name, value in sir.global_variables.map.iteritems():
+    for name, value in hir.global_variables.map.iteritems():
       str_=""
     if value.WhichOneof("Value") == "integer_value":
       str_ += "integer "+name
@@ -213,21 +214,26 @@ class deserializer:
 
 
 
-sir = HIR_pb2.HIR()
-file_name = sys.argv[1]
+parser=argparse.ArgumentParser(
+    description='''Deserializes a google protobuf file encoding an HIR example and traverses the AST printing a DSL code with the user equations''',
+)
+#parser.add_argument('--hir', type=string, help='FOO!')
+parser.add_argument('hirfile',type=argparse.FileType('rb'), help='google protobuf HIR file')
+args=parser.parse_args()
 
-f = open(file_name, "rb")
-sir.ParseFromString(f.read())
+hir = HIR_pb2.HIR()
 
-f.close()
+hir.ParseFromString(args.hirfile.read())
+
+args.hirfile.close()
 
 
 T = textwrap.TextWrapper(initial_indent=' '*1, width=120,subsequent_indent=' '*1)
 des = deserializer()
 
-des.visitGlobalVariables(sir.global_variables)
+des.visitGlobalVariables(hir.global_variables)
 
-for stencil in sir.stencils:
+for stencil in hir.stencils:
   des.visitStencil(stencil)
 
 

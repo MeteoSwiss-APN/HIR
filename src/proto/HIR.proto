@@ -8,29 +8,29 @@
  *
  *
  *  This file is distributed under the MIT License (MIT).
- *  See LICENSE.txt for details.
+ *  See https://github.com/MeteoSwiss-APN/dawn/LICENSE.txt for details.
  *
 \*===------------------------------------------------------------------------------------------===*/
 
-// @defgroup sir_proto HIR protobuf
+// @defgroup hir_proto HIR protobuf
 // @brief This is a HIR description for Google's protocol buffers library
 // <a href="https://developers.google.com/protocol-buffers/">Protobuf</a>.
 
 syntax = "proto3";
 
-package dawn.sir.proto;
+package dawn.hir.proto;
 
 // @brief Source information
 //
 // `(-1,-1)` indicates an invalid location.
-// @ingroup sir_proto
+// @ingroup hir_proto
 message SourceLocation {
   int32 Line = 1;   // Source line
   int32 Column = 2; // Column in the `Line`
 }
 
 // @brief Description of a field argument of a Stencil or StencilFunction
-// @ingroup sir_proto
+// @ingroup hir_proto
 message Field {
   string name = 1;        // Name of the field
   SourceLocation loc = 2; // Source location
@@ -41,7 +41,7 @@ message Field {
 // @brief Directional argument of a StencilFunction
 //
 // Note that this message is merely a placeholder as the actual arguments is encoded as an AST node.
-// @ingroup sir_proto
+// @ingroup hir_proto
 message Direction {
   string name = 1;        // Name of the directional argument
   SourceLocation loc = 2; // Source location
@@ -50,14 +50,14 @@ message Direction {
 // @brief Offset argument of a StencilFunction
 //
 // Note that this message is merely a placeholder as the actual arguments is encoded as an AST node.
-// @ingroup sir_proto
+// @ingroup hir_proto
 message Offset {
   string name = 1;        // Name of the offset argument
   SourceLocation loc = 2; // Source location
 }
 
 // @brief Directional argument of a StencilFunction
-// @ingroup sir_proto
+// @ingroup hir_proto
 message StencilFunctionArg {
   // One of Field, Direction or Offset
   oneof Arg {
@@ -75,7 +75,7 @@ message StencilFunctionArg {
 //  - `upper_level <= Interval::End`
 //  - `(lower_level + lower_offset) <= (upper_level + upper_offset)`
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message Interval {
   // Indication of a special level
   enum SpecialLevel {
@@ -106,7 +106,7 @@ message Interval {
 }
 
 // @brief Supported builtin types
-// @ingroup sir_proto
+// @ingroup hir_proto
 message BuiltinType {
   enum TypeID { Invalid = 0; Auto = 1; Boolean = 2; Integer = 3; Float = 4; }
 
@@ -114,7 +114,7 @@ message BuiltinType {
 }
 
 // @brief Supported builtin types
-// @ingroup sir_proto
+// @ingroup hir_proto
 message Dimension {
   enum Direction { I = 0; J = 1; K = 2; Invalid = 3; }
 
@@ -122,7 +122,7 @@ message Dimension {
 }
 
 // @brief Supported builtin types
-// @ingroup sir_proto
+// @ingroup hir_proto
 message Type {
   // Underlying type (either a custom type given by `name` or a `BuiltinType`)
   oneof type {
@@ -135,7 +135,7 @@ message Type {
 }
 
 // @brief Declaration of a vertical region
-// @ingroup sir_proto
+// @ingroup hir_proto
 message VerticalRegion {
   enum LoopOrder { Forward = 0; Backward = 1; }
 
@@ -146,7 +146,7 @@ message VerticalRegion {
 }
 
 // @brief Stencil call declaration
-// @ingroup sir_proto
+// @ingroup hir_proto
 message StencilCall {
   SourceLocation loc = 1;       // Source location of the stencil call
   string callee = 2;            // Name of the called stencil (i.e callee)
@@ -158,7 +158,7 @@ message StencilCall {
 \*===------------------------------------------------------------------------------------------===*/
 
 // @brief This is a union of all the statements
-// @ingroup sir_proto
+// @ingroup hir_proto
 message Stmt {
   oneof stmt {
     BlockStmt block_stmt = 1;
@@ -173,7 +173,7 @@ message Stmt {
 }
 
 // @brief This is a union of all the expressions
-// @ingroup sir_proto
+// @ingroup hir_proto
 message Expr {
   oneof expr {
     UnaryOperator unary_operator = 1;
@@ -200,7 +200,7 @@ message Expr {
 //  statement_N
 // }
 // @endcode
-// @ingroup sir_proto
+// @ingroup hir_proto
 message BlockStmt {
   repeated Stmt statements = 1; // List of statements
   SourceLocation loc = 2;       // Source location
@@ -208,7 +208,7 @@ message BlockStmt {
 
 // @brief A statement wrapping an expression
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message ExprStmt {
   Expr expr = 1;          // Expression
   SourceLocation loc = 2; // Source location
@@ -216,7 +216,7 @@ message ExprStmt {
 
 // @brief Return statement
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message ReturnStmt {
   Expr expr = 1;          // Expression to return
   SourceLocation loc = 2; // Source location
@@ -246,7 +246,7 @@ message ReturnStmt {
 //  - init_list: {LiteralAccessExpr{"2.3"}, LiteralAccessExpr{"5.3"}}
 // @endcode
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message VarDeclStmt {
   Type type = 1;       // Type of the variable
   string name = 2;     // Name of the variable
@@ -261,7 +261,7 @@ message VarDeclStmt {
 
 // @brief Declaration of a vertical region
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message VerticalRegionDeclStmt {
   VerticalRegion vertical_region = 1;
   SourceLocation loc = 2; // Source location
@@ -269,7 +269,7 @@ message VerticalRegionDeclStmt {
 
 // @brief Declaration of a stencil call
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message StencilCallDeclStmt {
   StencilCall stencil_call = 1;
   SourceLocation loc = 2; // Source location
@@ -277,7 +277,7 @@ message StencilCallDeclStmt {
 
 // @brief Declaration of a boundary condition
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message BoundaryConditionDeclStmt {
   string functor = 1;        // Identifier of the boundary condition functor
   repeated Field fields = 2; // List of field arguments to apply the functor to
@@ -294,7 +294,7 @@ message BoundaryConditionDeclStmt {
 //    else_part
 // @endcode
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message IfStmt {
   Stmt cond_part = 1;     // Condition (needs to be an `ExprStmt`)
   Stmt then_part = 2;     // Then part
@@ -308,7 +308,7 @@ message IfStmt {
 // @code{.cpp}
 //  op operand
 // @endcode
-// @ingroup sir_proto
+// @ingroup hir_proto
 message UnaryOperator {
   string op = 1;          // Operation (e.g "+" or "-")
   Expr operand = 2;       // Expression to apply the operation
@@ -321,7 +321,7 @@ message UnaryOperator {
 // @code{.cpp}
 //  left op right
 // @endcode
-// @ingroup sir_proto
+// @ingroup hir_proto
 message BinaryOperator {
   Expr left = 1;          // Left-hand side
   string op = 2;          // Operation (e.g "+" or "-")
@@ -335,7 +335,7 @@ message BinaryOperator {
 // @code{.cpp}
 //  left = right
 // @endcode
-// @ingroup sir_proto
+// @ingroup hir_proto
 message AssignmentExpr {
   Expr left = 1;          // Left-hand side
   string op = 2;          // Operation (e.g "=" or "+=")  
@@ -349,7 +349,7 @@ message AssignmentExpr {
 // @code{.cpp}
 //  cond ? left : right
 // @endcode
-// @ingroup sir_proto
+// @ingroup hir_proto
 message TernaryOperator {
   Expr cond = 1;          // Condition
   Expr left = 2;          // Left-hand side
@@ -363,7 +363,7 @@ message TernaryOperator {
 // @code{.cpp}
 //  callee(arg0, ..., argN)
 // @endcode
-// @ingroup sir_proto
+// @ingroup hir_proto
 message FunCallExpr {
   string callee = 1;           // Identifier of the function (i.e callee)
   repeated Expr arguments = 2; // List of arguments
@@ -376,7 +376,7 @@ message FunCallExpr {
 // @code{.cpp}
 //  callee(arg0, ..., argN)
 // @endcode
-// @ingroup sir_proto
+// @ingroup hir_proto
 message StencilFunCallExpr {
   string callee = 1;           // Identifier of the stencil function (i.e callee)
   repeated Expr arguments = 2; // List of arguments
@@ -389,7 +389,7 @@ message StencilFunCallExpr {
 // reference an argument of a stencil functions if the current stencil function is called within the
 // scope of another stencil function (nested calls).
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message StencilFunArgExpr {
   // Dimension of the argument
   Dimension dimension = 1;
@@ -425,7 +425,7 @@ message StencilFunArgExpr {
 
 // @brief Access to a variable
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message VarAccessExpr {
   string name = 1;        // Name of the variable
   Expr index = 2;         // Is it an array access (i.e var[2])?
@@ -435,7 +435,7 @@ message VarAccessExpr {
 
 // @brief Access to a field
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message FieldAccessExpr {
   // Name of the field
   string name = 1;
@@ -485,7 +485,7 @@ message FieldAccessExpr {
 
 // @brief Access of a literal
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message LiteralAccessExpr {
   string value = 1;       // Value of the literal (e.g "1.24324")
   BuiltinType type = 2;   // Type of the literal
@@ -494,7 +494,7 @@ message LiteralAccessExpr {
 
 // @brief Abstract syntax tree of the HIR
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message AST {
   Stmt root = 1; // Root node
 }
@@ -509,7 +509,7 @@ message AST {
 // producing a finite number of output fields, hence a stencilcan have multiple output fields.
 // Hence, a stencil is described by an AST and a list of participating Field(s).
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message Stencil {
   // Name of the stencil
   string name = 3;
@@ -536,7 +536,7 @@ message Stencil {
 // vertical boundary conditions. Next to simple field and scalar arguments, stencil functions can be
 // parametrized on Direction `(i, j or k)` and Offset `(i+1) arguments.
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message StencilFunction {
   // Name of the stencil function
   string name = 5;
@@ -580,7 +580,7 @@ message GlobalVariableValue {
 // name and a value which can either be set statically at compile time or dynamically at run
 // time.
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message GlobalVariableMap {
   map<string, GlobalVariableValue> map = 1; // Mape of global variables (name to value)
 }
@@ -594,7 +594,7 @@ message GlobalVariableMap {
 // The Stencil Intermediate Representation (HIR) allows to define multiple high level DSLs in a
 // lightweight manner by reusing most of the complex toolchain i.e the Dawn library.
 //
-// @ingroup sir_proto
+// @ingroup hir_proto
 message HIR {
   // Name of the file the HIR was parsed from (can be empty)
   string filename = 4;
