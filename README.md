@@ -31,7 +31,7 @@ The HIR package build will
 * compile the HIR.proto specification
 that will generate a python module to handle the protobuffer nodes and travers the AST of any HIR that follows the specification of HIR.proto
 
-The python module is generated under <HIR>/gen/src/proto/HIR_pb2.py
+The python module is generated under ``<HIR>/gen/src/proto/HIR_pb2.py``
   
 ## Python deserialization of an HIR file
 
