@@ -26,7 +26,7 @@ install_protobuf(
 )
 
 message("${Protobuf_DIR} KL ${ProtocBinary}")
-add_custom_command(OUTPUT "SIR_pb2.py" COMMAND ${CMAKE_SOURCE_DIR}/cmake/scripts/compileProto.sh "${ProtocBinary}" "${CMAKE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}")
+add_custom_command(OUTPUT "HIR_pb2.py" COMMAND ${CMAKE_SOURCE_DIR}/cmake/scripts/compileProto.sh "${ProtocBinary}" "${CMAKE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}")
 add_custom_command(OUTPUT "dummy.d" COMMAND /bin/bash /code/HIRExample/build/protobuf_python_install_script.sh)
-add_custom_target(proto_python ALL DEPENDS "SIR_pb2.py" "dummy.d")
+add_custom_target(proto_python ALL DEPENDS "HIR_pb2.py" "dummy.d")
 

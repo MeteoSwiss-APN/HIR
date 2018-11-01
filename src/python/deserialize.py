@@ -1,4 +1,4 @@
-import SIR_pb2
+import HIR_pb2
 import textwrap
 import sys
 
@@ -213,7 +213,7 @@ class deserializer:
 
 
 
-sir = SIR_pb2.SIR()
+sir = HIR_pb2.HIR()
 file_name = sys.argv[1]
 
 f = open(file_name, "rb")
