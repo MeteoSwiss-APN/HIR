@@ -32,7 +32,7 @@ The HIR package build will
 (under doc)
 * download a build google protobuffers software
 * compile the HIR.proto specification
-that will generate a python module to handle the protobuffer nodes and travers the AST of any HIR that follows the specification of HIR.proto
+that will generate a python module to handle the HIR nodes and traverse the AST of any HIR that follows the specification of HIR.proto
 
 The python module is generated under ``<HIR>/gen/src/proto/HIR_pb2.py``
   
