@@ -25,7 +25,6 @@ install_protobuf(
     URL_MD5 "1d077a7d4db3d75681f5c333f2de9b1a"
 )
 
-message("${Protobuf_DIR} KL ${ProtocBinary}")
 add_custom_command(OUTPUT "HIR_pb2.py" COMMAND ${CMAKE_SOURCE_DIR}/cmake/scripts/compileProto.sh "${ProtocBinary}" "${CMAKE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}")
 add_custom_command(OUTPUT "dummy.d" COMMAND /bin/bash ${CMAKE_BINARY_DIR}/protobuf_python_install_script.sh)
 add_custom_target(proto_python ALL DEPENDS "HIR_pb2.py" "dummy.d")
