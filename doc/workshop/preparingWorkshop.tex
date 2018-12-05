@@ -65,8 +65,8 @@ escapeinside={<@}{@>}
 \setlength\parindent{0pt}
 
 
-\title{Preparation for the ESCAPE-2 Workshop}
-\author{Tobias Wicky}
+\title{Preparation for the ESCAPE-2 Workshop on HIR concepts}
+\author{Tobias Wicky, Oliver Fuhrer, Reinhard Budich, Carlos Osuna}
 
 \geometry{left=3cm, right=2cm, bottom=30mm}
 \begin{document}
@@ -169,12 +169,12 @@ The following example introduces computational patterns like those found in fini
 
 The following pseudo-code represents the computation of a filter or diffusion operator applied to a field
 
-\begin{lstlisting}
+\begin{lstlisting}[label=lst:diff, caption=pseudo-code for a diffusion operator example]
 computation diffusion{
   field u; 
   tmp lap;
 
-  lap = u[i+1,j] + u[i-1,j] + u[i,j+1] + u[i,j-1] - 4*u[i,j]
+  lap = u[i+1,j] + u[i-1,j] + u[i,j+1] + u[i,j-1] - 4*u[i,j] <@\label{ln:lap}@>
   u = lap[i+1,j] + lap[i-1,j] + lap[i,j+1] + lap[i,j-1] - 4*lap[i,j]
 }
 \end{lstlisting}
@@ -249,13 +249,14 @@ computation diffusion{
 
 Given this analysis, the following set of concepts would be enough to provide a full specification of the example: 
 
-\begin{itemize}
-	\item \textbf{Dimensions}: this concept is needed to described the existing dimensions (i,j,k) in this domain.
-	\item \textbf{Field declaration}: declares input/output fields of the computation as well as temporaries.
-	\item \textbf{Field access with relative offsets in a cartesian grid}: allows to represent neighbour accesses like $u[i+1,j]$.
-	\item \textbf{vertical iteration space region}: which allows to specialize the equations for different vertical regions.
-\end{itemize} 
-Like that, the computation of $lap$ in TODO can be expressed as \textit{sum of different field access with relative offsets}.
+\begin{enumerate}[label=\textbf{C.\arabic*}]
+  \item \textbf{Dimensions}: this concept is needed to described the existing dimensions (i,j,k) in this domain.
+  \item \textbf{Field declaration}: declares input/output fields of the computation as well as temporaries.
+  \item \textbf{Field access with relative offsets in a cartesian grid}: allows to represent neighbour accesses like $u[i+1,j]$. \label{C:FieldAccess}
+  \item \textbf{vertical iteration space region}: which allows to specialize the equations for different vertical regions.
+\end{enumerate}
+
+Like that, the computation of $lap$ in \cref{ln:lap} of \cref{lst:diff} can be expressed as \textit{sum of different field access with relative offsets}.
 
 Alternatively, the same example could be presented in matrix formulation
 
@@ -280,126 +281,53 @@ in which case, the \textit{sum of different field access with relative offsets} 
 \section{Example for an unstructured mesh}
 In this example, we present similar operators but implemented this time in a unstructured mesh, where the number of neighbours are not fixed and can vary from grid point to grid point.
 
-\begin{lstlisting}
+The example is shown in pseudo-code in \cref{lst:on_edges} and depicted in \cref{fig:on_edges}
+
+\begin{lstlisting}[label=lst:on_edges, caption=Pseudo-code example of operator on neighbour grid points on an irregular grid]
 computation div{
-  field f, div
+  field f, edge_length, div
   
   iterationSpace {
-    div = reduction(f[neighbours], +) - 3*f
+    div = reduction<neighbours>(f*edge_length, +)
   }
 }
 \end{lstlisting}
+
+\begin{figure}[htp!]
+	\includegraphics[width=4cm]{./on_edges.png}
+	\caption{Example operator of a reduction on neighbour grid point elements}
+	\label{fig:on_edges}
+\end{figure}
 
 The particularities of this example are:
 \begin{enumerate}
 	\item Accesses to neighbours are uniform. It does not customize weights for different neighbours
 	\item The number of neighbours is not specified, the same operator could work on triangles, quadrilaterals, etc
-	\item Dimensionality depends on the underlying grid. This operator applied to a structured lat-lon grid could be used with the same IJK dimensions. However when used for an unstructured mesh, only one dimension
+	\item Dimensionality depends on the underlying grid. This operator applied to a structured lat-lon grid could be used with the same IJK dimensions. However when used for an (horizontal) unstructured mesh, only one dimension can be used for the horizontal, since there is no notion of row and columns.
 \end{enumerate}
+
+In this case, the concept of field access with relative offset (\cref{C:FieldAccess}) can
+not be used to describe the neighbour operations. Instead we will need a new concept
+
+\begin{enumerate}[label=\textbf{C.\arabic*}]
+	  \setcounter{enumi}{4}
+	\item \textbf{Reduction Over Neighbours}: this concept describes a reduction operation over neighbours, that contains an operator for reduction (sum in the example) and the field/fields on which it operates.
+\end{enumerate}
+
+Additionally, in the case of non-colocated grids, like shown also in \cref{fig:on_edges} we will need a concept of location or function space (edges, vertices, faces,...), 
+that describes where the fields are located. The reduction operation over neighbours will then be different depending on the location of the output field and the location of the neighbour accesses.  
+We will leave the exercise of extending the concepts to support non-colocated grids and 
+possibly more complex operators over neighbours to the reader and developers of models that
+contain these computational patterns. 
 
 \section{Workshop Checklist}
 
 \begin{itemize}
-	\item bring the most common computational pattern ready to be presented and discussed in pseudo-code, Fortran, or any other language, but simple enough so that we can reason about it. Extract the relevant computing patterns by removing boiler-plate and unnecessary code.
+	\item Bring the most common computational pattern ready to be presented and discussed in pseudo-code, Fortran, or any other language, but simple enough so that we can reason about it. Extract the relevant computing patterns by removing boiler-plate and unnecessary code.
 	\item Focus on the most commonly used patterns, but dont forget to also consider corner cases, or more rare cases. Even if we focus on the most frequently used patterns, it is important to understand how much of the total application would the HIR cover.
 	\item The first day we will organize working groups where developers from models/methods with similar computational patterns would gather to discuss them and the concepts of an HIR that could be proposed. Be ready to present your pseudo-code or reasoning to others in such a way that they can understand the essence of it.
 	\item Reasoning about patterns and concepts is enough. We dont need functional, compiling and running applications
 \end{itemize}
-
-\resizebox{\textwidth}{!}{
-  \begin{tabular}{|c|c|c|c|}
-    \hline
-    \rowcolor[HTML]{FFCE93} 
-    \multicolumn{4}{|c|}{\textbf{Data Structures}}\\
-    \rowcolor[HTML]{FFCE93} 
-    field-dimensions      & data-points per mesh-point  & compile time variables       & temporaries vs input/ouput \\ \hline
-    ?                     & ?                           & ?                            & yes                        \\ \hline
-    \rowcolor[HTML]{FFCE93} 
-    \multicolumn{4}{|c|}{\textbf{Access Patterns}}\\
-    \rowcolor[HTML]{FFCE93} 
-    only neighbour access & specific neighbour accesses & absolute / relative indexing & indirect indexing          \\ \hline
-    ?                     & ?                           & ?                            & ?                          \\ \hline
-    \rowcolor[HTML]{FFCE93} 
-    \multicolumn{4}{|c|}{\textbf{Computation}}\\
-    \rowcolor[HTML]{FFCE93} 
-    iteration pattern     & restricted computation      & vertical specialization      & other iteration patterns   \\ \hline
-    full domain only      & ?                           & ?                            & ?                          \\ \hline
-  \end{tabular}
-}
-\vspace*{2mm}
-
-This very simple unstructured code removes all the complexity and just shows neighbour accesses.
-Most grids have more then one data-point per cell though. This might look like this:
-
-\begin{lstlisting}
-globalVariable{
-  int subtraction = 7
-}
-
-computation laplacian{
-  field input, output
-  
-  iterationSpace {
-  u = neighbour_loop(v){ return field[center] } 
-           + neighbour_loop(w){ return 2*field[center] - subtraction } - 4*u[center]
-   }
-}
-\end{lstlisting}
-\resizebox{\textwidth}{!}{
-  \begin{tabular}{|c|c|c|c|}
-    \hline
-    \rowcolor[HTML]{FFCE93} 
-    \multicolumn{4}{|c|}{\textbf{Data Structures}}\\
-    \rowcolor[HTML]{FFCE93} 
-    field-dimensions      & data-points per mesh-point  & compile time variables       & temporaries vs input/ouput \\ \hline
-    ?                     & multiple                    & yes                          & yes                        \\ \hline
-    \rowcolor[HTML]{FFCE93} 
-    \multicolumn{4}{|c|}{\textbf{Access Patterns}}\\
-    \rowcolor[HTML]{FFCE93} 
-    only neighbour access & specific neighbour accesses & absolute / relative indexing & indirect indexing          \\ \hline
-    ?                     & ?                           & ?                            & ?                          \\ \hline
-    \rowcolor[HTML]{FFCE93} 
-    \multicolumn{4}{|c|}{\textbf{Computation}}\\
-    \rowcolor[HTML]{FFCE93} 
-    iteration pattern     & restricted computation      & vertical specialization      & other iteration patterns   \\ \hline
-    full domain only      & ?                           & ?                            & ?                          \\ \hline
-  \end{tabular}
-}
-\vspace*{2mm}
-
-We could potentially also combine mapping with specific neighbour access if patterns dictate this:
-\begin{lstlisting}
-computation laplacian{
-  field input, output
-  
-  iterationSpace {
-<@\colorbox{lbcolor}{\hspace{0.6cm}$\text{output}_\text{\textcolor{accesspattern}{C}}$ = $\text{input[\textcolor{accesspattern}{TrianglesUp}]}_\text{\textcolor{accesspattern}{E}}$$\begin{bmatrix}2 \\-1 \\ 0\end{bmatrix}$\hspace*{10.25cm}} @>
-<@\colorbox{lbcolor}{\hspace{0.6cm}$\text{output}_\text{\textcolor{accesspattern}{C}}$ += $\text{input[\textcolor{accesspattern}{TrianglesDown}]}_\text{\textcolor{accesspattern}{E}}$$\begin{bmatrix}-1 \\ 0\\ 2\end{bmatrix}$\hspace*{9.65cm}} @>
-  }
-}
-\end{lstlisting}
-\resizebox{\textwidth}{!}{
-  \begin{tabular}{|c|c|c|c|}
-    \hline
-    \rowcolor[HTML]{FFCE93} 
-    \multicolumn{4}{|c|}{\textbf{Data Structures}}\\
-    \rowcolor[HTML]{FFCE93} 
-    field-dimensions      & data-points per mesh-point  & compile time variables       & temporaries vs input/ouput \\ \hline
-    3d only               & multiple                    & yes                          & yes                        \\ \hline
-    \rowcolor[HTML]{FFCE93} 
-    \multicolumn{4}{|c|}{\textbf{Access Patterns}}\\
-    \rowcolor[HTML]{FFCE93} 
-    only neighbour access & specific neighbour accesses & absolute / relative indexing & indirect indexing          \\ \hline
-    yes                   & yes                         & only neightbour indexing     & no                         \\ \hline
-    \rowcolor[HTML]{FFCE93} 
-    \multicolumn{4}{|c|}{\textbf{Computation}}\\
-    \rowcolor[HTML]{FFCE93} 
-    iteration pattern     & restricted computation      & vertical specialization      & other iteration patterns   \\ \hline
-    full domain only      & yes                         & no                           & no                         \\ \hline
-  \end{tabular}
-}
-\vspace*{2mm}
-
 
 
 \end{document}
