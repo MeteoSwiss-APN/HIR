@@ -1,0 +1,405 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage[table]{xcolor}
+\usepackage{amsmath}
+\usepackage{multicol}
+\usepackage{todonotes}
+\usepackage{geometry}
+\usepackage{cleveref}
+\usepackage{longfbox}
+\usepackage{enumitem}
+% \usepackage[table,xcdraw]{xcolor}
+% \usepackage[most]{tcolorbox}
+
+\definecolor{listinggray}{gray}{0.9}
+\definecolor{lbcolor}{rgb}{0.9,0.9,0.9}
+\definecolor{llbcolor}{rgb}{0.97,0.97,0.97}
+
+\lstdefinelanguage{GTClang}{
+language     = C++,
+keywordstyle = [1]{\color[RGB]{140,45,4}},
+keywordstyle = [2]{\color[RGB]{254,153,41}},
+keywordstyle = [3]{\color[RGB]{236,112,20}},
+keywordstyle = [4]{\color[RGB]{204,76,2}},
+keywordstyle = [5]{\color[RGB]{240,59,32}},
+basicstyle=\footnotesize,
+%  identifierstyle=\color{magenta},
+stringstyle=\color{red}
+commentstyle=\color{ForestGreen},
+morekeywords = [1]{field},
+morekeywords = [1]{offset},
+morekeywords = [1]{temporary},
+morekeywords = [2]{function},
+morekeywords = [2]{computation},
+morekeywords = [2]{globalVariable},
+morekeywords = [3]{iterationSpace},
+morekeywords = [3]{level},
+morekeywords = [3]{topLevel},
+morekeywords = [3]{bottomLevel},
+morekeywords = [4]{neighbour_loop},
+morekeywords = [4]{reduction},
+morekeywords = [4]{neighbours},
+morekeywords = [5]{edges},
+morekeywords = [5]{center},
+}
+\lstset{
+backgroundcolor=\color{llbcolor},
+tabsize=4,
+language=GTClang,
+captionpos=b,
+tabsize=3,
+frame=lines,
+numbers=left,
+numberstyle=\tiny,
+numbersep=5pt,
+breaklines=true,
+showstringspaces=false,
+escapeinside={<@}{@>}
+}
+
+\definecolor{accesspattern}{RGB}{240,59,32}
+\setlength\parindent{0pt}
+
+
+\title{Preparation for the ESCAPE-2 Workshop}
+\author{Tobias Wicky}
+
+\geometry{left=3cm, right=2cm, bottom=30mm}
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+The High Level Intermediate representation (specific) for weather and
+climate applications aims at providing a standard specification for
+the typical algorithmic motifs of weather and climate codes
+in a way that is agnostic to the programming language. 
+It will allow us to standardize and share programming tools, domain specific languages (DSLs), source-to-source translators, etc that allow to write
+models in an expressive manner and generate efficient implementations
+in multiple architectures.
+
+With the involvement of key developers of different weather and climate
+models, the goal of the workshop is to identify and define HIR concepts
+that will be needed to capture most of the computational
+patterns present in weather and climate applications.
+
+In this document we describe the process of deriving some HIR concepts 
+for some particular computational patterns, to 
+serve as a demonstration of how to infer the relevant concepts needed in an HIR to capture the important algorithmic motifs of the different numerical methods, discretization schemes and grids that we plan to support.
+It is not the goal to propose a particular solution. On the contrary the document derives often multiple variants to motivate the discussion among the different developers. 
+
+\subsection{Characteristics of a  \textit{good} HIR}
+The following characteristics will be considered axioms of a good HIR.
+\label{sec:HIRDef}
+\begin{enumerate}[label=\textbf{A.\arabic*}]
+    \item Language independent 
+    \item Complete, in the sense of supporting all the relevant applications of weather and climate that the community would like to support
+    \item Hardware agnostic, no assumptions should be made on the hardware where it will run, like choosing a specific parallel model implementation. \label{A:hardware}
+    \item Extensible / enrichable
+    \item Simple
+    \item Orthogonal, No redundancy of concepts \label{A:ortho}
+\end{enumerate}
+
+
+\section{Computational patterns}
+\label{sec:comppatterns}
+Following the characteristics of a HIR given in \cref{sec:HIRDef}, this section will explain 
+what are the relevant computational patterns and how to capture them into concepts of an HIR.
+
+The idea is to extract a minimal set of orthogonal (\ref{A:ortho}) concepts with which we could express (unambiguously) the discretization of the numerical methods in the underlying grid.
+
+An efficient particular parallel implementation and the decisions taken (like how much data locality is fused within a single loop) depends on the target computing architecture. Therefore the HIR should only cover high level concepts of a descriptive language that captures the computational patterns of the discretization, without attempting to describe a parallel implementation (\ref{A:hardware}). 
+Details like where to insert halo exchanges, organization of the loops, data dependencies resolutions can be carried out by the analysis of the toolchain.
+
+A natural concept of HIR will be the statement, that would be equivalent to the update equation of a field. For example:
+\begin{lstlisting}
+lap = u[i+1,j] + u[i-1,j] + u[i,j+1] + u[i,j-1] - 4*u[i,j]
+\end{lstlisting}
+
+\begin{longfbox}[rounded]
+	We can assume that our program will be a sequence of statements, executed in order described (unless data dependencies allow a reordering) which would produce a valid result if they would be executed sequentially. \footnote{Notice this approach follows the imperative programming paradigm, similar to the way the statements of today's weather models form a Fortran program. Other approaches like a pure function approach could be adopted. The discussion of the implications lies out of the scope of this document.}
+\end{longfbox}
+
+
+\subsection{Identify Characteristics of Computational Patterns}
+\label{sec:idPattern}
+\textbf{Data Structures:}\newline
+All weather and climate models are computing on data that is multi-dimensional. Althoguh there are considerable differences from different methods/grids. Some questions that motivate the understanding of the data structure patterns follow:
+\begin{itemize}
+	\item what is the dimensionality of the code? How many dimensions are employed to represent prognostic variables or field in the grid?
+	\item Is each grid point containing a builtin type, e.g. double, int, etc... or complex types. 
+	\item Is the dimensionality fixed or can vary in different part of the code, or over time or in different areas of the grid (like in a mesh refinement approach) 
+	  \item What are the parallel dimensions (e.g. over which the domain is parallel decomposed with MPI) and which can not be solved in parallel since the application applies sequential solvers (e.g. Thomas algorithm of a tridiagonal solve) 
+\end{itemize}
+
+\textbf{Access Patterns:}\newline
+Any computation will operate on a set input fields and write into an output field, in a quasi-homogeneous (sometimes specializations for different regions of the grid might be required) manner through the whole grid. 
+
+The questions related to the access patterns are:
+\begin{itemize} 
+  \item Do we access neighbour grid points. If no, your access pattern is very simple, otherwise the following questions will apply.
+  \item Does the application access neighbours in all dimensions? 
+  \item Do the computations access one level or neighbours or go beyond? Is it limited to certain extent, or can the application access any far away neighbour (e.g. semi-lagrangian methods).
+  \item Are accesses uniform through all the neighbours of a grid-point in the topology of the grid, like a sum over all neighbour
+   triangles, or on the contrary are there specific neighbour accesses, like an advection scheme on X dimension (accessing  only neighbours in the I dimension)?
+  \item Are there absolute or relative indices?
+  \item Is indirect indexing required?
+\end{itemize}
+
+\textbf{Computation:}\newline
+\begin{itemize}
+  \item Are the computations homogeneous in the whole grid, or are there specializations required for certain regions? If so, where and in which dimensions?
+  \item What kind of computational patterns are required? Some examples are: compact horizontal or 3D stencils, iterative solvers in one or more than one direction (e.g. Thomas algorithm), iterative solvers (e.g. conjugent gradient), reduction operations (e.g. computation of a residual)?
+\end{itemize}
+
+
+\section{Examples}
+In this section we will analyze some examples of different computational patterns. From pseudo-code we will derive their properties and finally extract some concepts of an HIR that would be complete to describe the examples.
+ 
+Pseudocode is used to emphasize that the specific definition of the language is not relevant.
+irrespective of whether the model is currently written in plain Fortran, an embedded DSL or a high level DSL, the key concepts are the same.
+In the pseudo-code, loops are not present. Following the assumptions made in \cref{sec:comppatterns} the statements of the pseudo-code are supposed to produced valid code when execute sequentially, and the equations should update all the grid-points until covering the whole iteration space of the grid. 
+
+\section{Example on a structured lat-lon grid}
+The following example introduces computational patterns like those found in finite differences, finite volumes of a lat-lon grid. The grid is a cartesian 3-dimensional grid, with dimensions identified as $i,j,k$.
+
+The following pseudo-code represents the computation of a filter or diffusion operator applied to a field
+
+\begin{lstlisting}
+computation diffusion{
+  field u; 
+  tmp lap;
+
+  lap = u[i+1,j] + u[i-1,j] + u[i,j+1] + u[i,j-1] - 4*u[i,j]
+  u = lap[i+1,j] + lap[i-1,j] + lap[i,j+1] + lap[i,j-1] - 4*lap[i,j]
+}
+\end{lstlisting}
+
+The following tables summarizes the analysis to the questions in \cref{sec:idPattern}:
+
+
+\textbf{Data Structures:}\newline
+\begin{itemize}
+	\item what is the dimensionality of the code? How many dimensions are employed to represent prognostic variables or field in the grid?
+	
+	\textcolor{orange}{$\rightarrow$ 3 dimensions in a cartesian grid (i,j,k)}
+	
+	\item Is each grid point containing a builtin type, e.g. double, int, etc... or complex types. 
+	
+	\textcolor{orange}{$\rightarrow$ builtin type, i.e. double, int...}	
+	\item Is the dimensionality fixed or can vary in different part of the code, or over time or in different areas of the grid (like in a mesh refinement approach)
+	
+	\textcolor{orange}{$\rightarrow$ fixed} 
+	\item What are the parallel dimensions and which can not be solved in parallel since the application applies sequential solvers
+	
+	\textcolor{orange}{$\rightarrow$ this operator can be parallelized in any of the 3 dimensions. However the application is domain decomposed in IJ only since in the rest of the application there are other sequential solvers in the K dimension} 
+\end{itemize}
+
+\textbf{Access Patterns:}\newline
+\begin{itemize} 
+	\item Do we access neighbour grid points.
+	
+	\textcolor{orange}{$\rightarrow$ yes}
+	
+	\item Does the application access neighbours in all dimensions? 
+	
+	\textcolor{orange}{$\rightarrow$ in general yes, although this operator example only does it only for IJ}
+	\item Do the computations access one level or neighbours or go beyond? Is it limited to certain extent, or can the application access any far away neighbour (e.g. semi-lagrangian methods).
+	
+	\textcolor{orange}{$\rightarrow$ in this operator, we access only one level of neighbours. In general, the application can access more than one, but nevertheless limited to a (configurable) maximum number of neighbours.}
+	
+	\item Are accesses uniform through all the neighbours of a grid-point in the topology of the grid, like a sum over all neighbour
+	triangles, or on the contrary are there specific neighbour accesses, like an advection scheme on X dimension (accessing  only neighbours in the I dimension)?
+	
+	\textcolor{orange}{$\rightarrow$ this example is completely symmetric, however in the application there can be asymmetric operators, like advection in X}
+	
+	\item Are there absolute or relative indices?
+	
+	\textcolor{orange}{$\rightarrow$ all accesses are relative}
+	\item Is indirect indexing required?
+	
+	\textcolor{orange}{$\rightarrow$ no}
+\end{itemize}
+
+\textbf{Computation:}\newline
+\begin{itemize}
+	\item Are the computations homogeneous in the whole grid, or are there specializations required for certain regions? If so, where and in which dimensions?
+	
+	\textcolor{orange}{$\rightarrow$ this example is applied uniformly to the whole grid. However a there are other examples in the applications of vertical FD operators, like the following average, that require specialization on the vertical dimension}
+	
+	\begin{lstlisting}
+computation diffusion{
+  field u, avg;
+  
+  verticalIterationSpace(bottomLevel, topLevel-1) {
+    avg = (u[k+1] + u[k])*0.5;
+  }
+  verticalIterationSpace(topLevel) {
+    avg = u[k];
+  }
+}
+	\end{lstlisting}
+	
+	\item What kind of computational patterns are required? 
+\end{itemize}
+
+Given this analysis, the following set of concepts would be enough to provide a full specification of the example: 
+
+\begin{itemize}
+	\item \textbf{Dimensions}: this concept is needed to described the existing dimensions (i,j,k) in this domain.
+	\item \textbf{Field declaration}: declares input/output fields of the computation as well as temporaries.
+	\item \textbf{Field access with relative offsets in a cartesian grid}: allows to represent neighbour accesses like $u[i+1,j]$.
+	\item \textbf{vertical iteration space region}: which allows to specialize the equations for different vertical regions.
+\end{itemize} 
+Like that, the computation of $lap$ in TODO can be expressed as \textit{sum of different field access with relative offsets}.
+
+Alternatively, the same example could be presented in matrix formulation
+
+\begin{lstlisting}
+computation diffusion{
+  field u
+  temporary lap
+  
+  iterationSpace(topLevel, bottomLevel) {
+<@\colorbox{lbcolor}{\hspace{0.6cm}lap = u$\begin{bmatrix}0 & 1 & 0\\1 & -4 & 1 \\0 & 1 & 0\end{bmatrix}$\hspace*{11.9cm}} @>
+<@\colorbox{lbcolor}{\hspace{0.6cm}u = lap$\begin{bmatrix}0 & 1 & 0\\1 & -4 & 1 \\0 & 1 & 0\end{bmatrix}$\hspace*{11.7cm}} @>
+  }
+}
+\end{lstlisting}
+
+in which case, the \textit{sum of different field access with relative offsets} could be replace by a new concept
+\begin{itemize}
+	\item \textbf{Stencil field access with a matrix of coefficients}, like $u\begin{bmatrix}0 & 1 & 0\\1 & -4 & 1 \\0 & 1 & 0\end{bmatrix}$
+\end{itemize}
+
+
+\section{Example for an unstructured mesh}
+In this example, we present similar operators but implemented this time in a unstructured mesh, where the number of neighbours are not fixed and can vary from grid point to grid point.
+
+\begin{lstlisting}
+computation div{
+  field f, div
+  
+  iterationSpace {
+    div = reduction(f[neighbours], +) - 3*f
+  }
+}
+\end{lstlisting}
+
+The particularities of this example are:
+\begin{enumerate}
+	\item Accesses to neighbours are uniform. It does not customize weights for different neighbours
+	\item The number of neighbours is not specified, the same operator could work on triangles, quadrilaterals, etc
+	\item Dimensionality depends on the underlying grid. This operator applied to a structured lat-lon grid could be used with the same IJK dimensions. However when used for an unstructured mesh, only one dimension
+\end{enumerate}
+
+\section{Workshop Checklist}
+
+\begin{itemize}
+	\item bring the most common computational pattern ready to be presented and discussed in pseudo-code, Fortran, or any other language, but simple enough so that we can reason about it. Extract the relevant computing patterns by removing boiler-plate and unnecessary code.
+	\item Focus on the most commonly used patterns, but dont forget to also consider corner cases, or more rare cases. Even if we focus on the most frequently used patterns, it is important to understand how much of the total application would the HIR cover.
+	\item The first day we will organize working groups where developers from models/methods with similar computational patterns would gather to discuss them and the concepts of an HIR that could be proposed. Be ready to present your pseudo-code or reasoning to others in such a way that they can understand the essence of it.
+	\item Reasoning about patterns and concepts is enough. We dont need functional, compiling and running applications
+\end{itemize}
+
+\resizebox{\textwidth}{!}{
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    \rowcolor[HTML]{FFCE93} 
+    \multicolumn{4}{|c|}{\textbf{Data Structures}}\\
+    \rowcolor[HTML]{FFCE93} 
+    field-dimensions      & data-points per mesh-point  & compile time variables       & temporaries vs input/ouput \\ \hline
+    ?                     & ?                           & ?                            & yes                        \\ \hline
+    \rowcolor[HTML]{FFCE93} 
+    \multicolumn{4}{|c|}{\textbf{Access Patterns}}\\
+    \rowcolor[HTML]{FFCE93} 
+    only neighbour access & specific neighbour accesses & absolute / relative indexing & indirect indexing          \\ \hline
+    ?                     & ?                           & ?                            & ?                          \\ \hline
+    \rowcolor[HTML]{FFCE93} 
+    \multicolumn{4}{|c|}{\textbf{Computation}}\\
+    \rowcolor[HTML]{FFCE93} 
+    iteration pattern     & restricted computation      & vertical specialization      & other iteration patterns   \\ \hline
+    full domain only      & ?                           & ?                            & ?                          \\ \hline
+  \end{tabular}
+}
+\vspace*{2mm}
+
+This very simple unstructured code removes all the complexity and just shows neighbour accesses.
+Most grids have more then one data-point per cell though. This might look like this:
+
+\begin{lstlisting}
+globalVariable{
+  int subtraction = 7
+}
+
+computation laplacian{
+  field input, output
+  
+  iterationSpace {
+  u = neighbour_loop(v){ return field[center] } 
+           + neighbour_loop(w){ return 2*field[center] - subtraction } - 4*u[center]
+   }
+}
+\end{lstlisting}
+\resizebox{\textwidth}{!}{
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    \rowcolor[HTML]{FFCE93} 
+    \multicolumn{4}{|c|}{\textbf{Data Structures}}\\
+    \rowcolor[HTML]{FFCE93} 
+    field-dimensions      & data-points per mesh-point  & compile time variables       & temporaries vs input/ouput \\ \hline
+    ?                     & multiple                    & yes                          & yes                        \\ \hline
+    \rowcolor[HTML]{FFCE93} 
+    \multicolumn{4}{|c|}{\textbf{Access Patterns}}\\
+    \rowcolor[HTML]{FFCE93} 
+    only neighbour access & specific neighbour accesses & absolute / relative indexing & indirect indexing          \\ \hline
+    ?                     & ?                           & ?                            & ?                          \\ \hline
+    \rowcolor[HTML]{FFCE93} 
+    \multicolumn{4}{|c|}{\textbf{Computation}}\\
+    \rowcolor[HTML]{FFCE93} 
+    iteration pattern     & restricted computation      & vertical specialization      & other iteration patterns   \\ \hline
+    full domain only      & ?                           & ?                            & ?                          \\ \hline
+  \end{tabular}
+}
+\vspace*{2mm}
+
+We could potentially also combine mapping with specific neighbour access if patterns dictate this:
+\begin{lstlisting}
+computation laplacian{
+  field input, output
+  
+  iterationSpace {
+<@\colorbox{lbcolor}{\hspace{0.6cm}$\text{output}_\text{\textcolor{accesspattern}{C}}$ = $\text{input[\textcolor{accesspattern}{TrianglesUp}]}_\text{\textcolor{accesspattern}{E}}$$\begin{bmatrix}2 \\-1 \\ 0\end{bmatrix}$\hspace*{10.25cm}} @>
+<@\colorbox{lbcolor}{\hspace{0.6cm}$\text{output}_\text{\textcolor{accesspattern}{C}}$ += $\text{input[\textcolor{accesspattern}{TrianglesDown}]}_\text{\textcolor{accesspattern}{E}}$$\begin{bmatrix}-1 \\ 0\\ 2\end{bmatrix}$\hspace*{9.65cm}} @>
+  }
+}
+\end{lstlisting}
+\resizebox{\textwidth}{!}{
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    \rowcolor[HTML]{FFCE93} 
+    \multicolumn{4}{|c|}{\textbf{Data Structures}}\\
+    \rowcolor[HTML]{FFCE93} 
+    field-dimensions      & data-points per mesh-point  & compile time variables       & temporaries vs input/ouput \\ \hline
+    3d only               & multiple                    & yes                          & yes                        \\ \hline
+    \rowcolor[HTML]{FFCE93} 
+    \multicolumn{4}{|c|}{\textbf{Access Patterns}}\\
+    \rowcolor[HTML]{FFCE93} 
+    only neighbour access & specific neighbour accesses & absolute / relative indexing & indirect indexing          \\ \hline
+    yes                   & yes                         & only neightbour indexing     & no                         \\ \hline
+    \rowcolor[HTML]{FFCE93} 
+    \multicolumn{4}{|c|}{\textbf{Computation}}\\
+    \rowcolor[HTML]{FFCE93} 
+    iteration pattern     & restricted computation      & vertical specialization      & other iteration patterns   \\ \hline
+    full domain only      & yes                         & no                           & no                         \\ \hline
+  \end{tabular}
+}
+\vspace*{2mm}
+
+
+
+\end{document}
