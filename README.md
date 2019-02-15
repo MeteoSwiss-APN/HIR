@@ -29,6 +29,7 @@ https://github.com/MeteoSwiss-APN/HIR/tree/master/src/python
 mkdir build
 cd build
 cmake ..
+make protobuf
 make 
 ```
 
