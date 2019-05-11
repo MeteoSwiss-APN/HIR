@@ -2,214 +2,221 @@
 
 \begin{lstlisting}[style=default]
 Program {
-  GridDimension {[ncol, nlay, ngpt]}
+  [ GridDimension {ncol}, GridDimension {nlay}, GridDimension {ngpt}],
   Domain {
-    parallel_domain_dim : ncol
-    vertical_dim : nlay
+    parallel_domain_dim : ncol,
+    vertical_dim : nlay,
     parallel_dim : ngpt
   },
   FieldDecl {
-    name : mu0, GridDimension {[ncol]}
-  }
+    real, [GridDimension {ncol}],
+    name : mu0
+  },
   FieldDecl {
-    name : tau, GridDimension {[ncol, nlay, ngpt]}
-  }
+    real, [GridDimension {ncol}, GridDimension{nlay}, GridDimension{ngpt}],
+    name : tau
+  },
   FieldDecl {
-    name : w0, GridDimension {[ncol,nlay, ngpt]}
-  }
+    real, [GridDimension {ncol}, GridDimension {nlay}, GridDimension{ngpt}]
+    name : w0
+  },
   FieldDecl {
-    name : g, GridDimension {[ncol,nlay, ngpt]}
-  }
+    real, [GridDimension {ncol}, GridDimension {nlay}, GridDimension {ngpt}],
+    name : g
+  },
   FieldDecl {
-    name : Rdif, GridDimension {[ncol,nlay]}
-  }
+    real, [GridDimension {ncol}, GridDimension{nlay}],
+    name : Rdif
+  },
   FieldDecl {
-    name : Tdif, GridDimension {[ncol,nlay]}
-  }
+    real, [GridDimension {ncol}, GridDimension {nlay}],
+    name : Tdif
+  },
   FieldDecl {
-    name : Rdir, GridDimension {[ncol,nlay]}
-  }
+    real, [GridDimension {ncol}, GridDimension {nlay}],
+    name : Rdir
+  },
   FieldDecl {
-    name : Tdir, GridDimension {[ncol,nlay]}
-  }
+    real, [GridDimension {ncol}, GridDimension {nlay}],
+    name : Tdir
+  },
   FieldDecl {
-    name : Tnoscat, GridDimension {[ncol,nlay]}
-  }
+    real, [GridDimension {ncol}, GridDimension {nlay}],
+    name : Tnoscat
+  },
   VarDecl {
-    type : int
-    name : ncolbounds
+    int,
+    name : ncolbounds,
     isarg : true
-  }
+  },
   VarDecl {
-    type : int
-    name : nlaybounds
+    int,
+    name : nlaybounds,
     isarg : true
-  }  
+  },  
   ScopedProgram {
     // two_stream (Missing arg list, name of what is called, shouldn't inline stuff at this point)
     // adding_sw (same as up)
     // additional_step (same as up)
     // two_stream
     VarDecl {
-      type : real
+      real,
       name : mu0_inv
-    }
+    },
     VarDecl {
-      type : real
+      real,
       name : mu0_inv
-    }
+    },
     VarDecl {
-      type : real
+      real,
       name : gamma1
-    }
+    },
     VarDecl {
-      type : real
+      real,
       name : gamma2
-    }
+    },
     VarDecl {
-      type : real
+      real,
       name : gamma3
-    }
+    },
     VarDecl {
-      type : real
+      real,
       name : gamma4
-    }
+    },
     VarDecl {
-      type : real
+      real,
       name : alpha1
-    }
+    },
     VarDecl {
-      type : real
+      real,
       name : alpha2
-    }
+    },
     VarDecl {
-      type : real
+      real,
       name : k
-    }
+    },
     VarDecl {
-      type : real
+      real,
       name : RT_term
-    }
+    },
     VarDecl {
-      type : real
+      real,
       name : exp_minusktau
-    }
+    },
     VarDecl {
-      type : real
+      real,
       name : exp_minus2ktau
-    }
+    },
     VarDecl {
-      type : real
+      real,
       name : k_mu
-    }
+    },
     VarDecl {
-      type : real
+      real,
       name : k_gamma3
-    }
+    },
     VarDecl {
-      type : real
+      real,
       name : k_gamma4
-    }
-
+    },
     BlockStmt {
       // Computation, this is the only stmt that we will express as a tree. 
       // From this on, pseudocode for the statements will be used
       AssignmentStmt {
         VarAccess {
           name : mu0_inv
-        }
+        },
         divOp {
           VarAccess {
             name : mu0
-          }
+          },
           Literal {
-            type : real
+            real,
             value : 1.0
           }
         }
-      }
+      },
       Computation {
-        GridDimension : ngpt
-        GridDimension : ncol
+        [ GridDimension {name: ngpt}, GridDimension {name: ncol} ],
         DimensionInterval {
-          GridDimension : nlay
+          GridDimension {name : nlay},
           DimensionLevel {
             VarAccess { 
-              VarDecl { nlaybounds }
-              Literal {0}
-            }
+              Literal {0},
+	      name : nlaybounds
+            },
             offset : 0
-          }
+          },
           DimensionLevel {
             VarAccess { 
-              VarDecl { nlaybounds }
-              Literal {1}
-            }
+              Literal {1},
+	      name : nlaybounds
+            },
             offset : 0
           }
-        }
+        },
         BlockStmt {
           AssignmentStmt {
             VarAccess {
               name : gamma1
-            }
+            },
             mulOp {
               minusOp {
-                Literal { 8.0 }
+                Literal { 8.0 },
                 mulOp {
-                  VarAccess { name : w0 }
+                  VarAccess { name : w0 },
                   addOp {
-                    Literal { 5.0 }
+                    Literal { 5.0 },
                     mulOp {
-                      Literal { 3.0 }
+                      Literal { 3.0 },
                       VarAccess { name : g }
                     }
                   }
                 }
-              }
+              },
               Literal { 0.25 }
-            }
-            lineno : 654
+            },
+            lineno : 654,
             file : sw_solver.f90
-          }
+          },
           AssignmentStmt {
-            VarAccess { name : gamma2}
+            VarAccess { name : gamma2},
             mulOp {
-              Literal { 3.0 }
+              Literal { 3.0 },
               mulOp {
                 mulOp {
-                  VarAccess { name : w0 }
+                  VarAccess { name : w0 },
                   minusOp {
-                    Literal { 1.0 }
+                    Literal { 1.0 },
                     VarAccess { name : g }
                   }
-                }
+                },
                 Literal { 0.25 }
               }
-            }
-            lineno : 655
+            },
+            lineno : 655,
             file : sw_solver.f90
-          }
+          },
           AssignmentStmt {
-            VarAccess { name : gamma3 }
+            VarAccess { name : gamma3 },
             mulOp {
               minusOp {
-                Literal { 2.0 }
+                Literal { 2.0 },
                 mulOp {
                   mulOp {
-                    Literal { 3.0 }
+                    Literal { 3.0 },
                     VarAccess { name : mu0 }
-                  }
+                  },
                   VarAccess { name : g }
                 }                  
-              }
+              },
               Literal { 0.25 }
             }
           }
           AssignmentStmt {
-            VarAccess { name : gamma4 }
+            VarAccess { name : gamma4 },
             minusOp {
-              Literal { 1.0 }
+              Literal { 1.0 },
               VarAccess { name : gamma3 }
             }
           }

@@ -21,7 +21,7 @@ Description of the element {\tt Program} element:
 {Definition of scalar variables arguments to the program}{O}
 \HIRElementDef{ScopedProgram}
 {a scoped program with computational patterns supported by the concepts of the HIR}{O}
-\HIRElementDef{ExternalKernek}
+\HIRElementDef{ExternalKernel}
 {describes a kernel that contains computational patterns non supported by the concepts of the HIR}{O}
 \end{HIRChildElements}
 
@@ -97,6 +97,7 @@ The {\tt ExternalKernel} defines a call to an external kernel, for which computa
 The {\tt GridDimension} elements defines a dimension of a multidimensional space where fields are discretized and over which \concept{Computation}s iterate.
 
 \HIRContentsModel{ () }
+
 \begin{HIRAttributes}
 	\HIRAttrDef{name}{text}
 	{Name of the dimension}{R}

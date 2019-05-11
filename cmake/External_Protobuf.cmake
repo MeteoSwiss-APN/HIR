@@ -11,7 +11,7 @@ set(DIR_OF_PROTO_EXTERNAL ${CMAKE_CURRENT_LIST_DIR})
 
 function(install_protobuf)
   set(options)
-  set(one_value_args URL URL_MD5 DOWNLOAD_DIR)
+  set(one_value_args GIT_REPOSITORY GIT_TAG DOWNLOAD_DIR)
   set(multi_value_args REQUIRED_VARS CMAKE_ARGS)
   cmake_parse_arguments(ARG "${options}" "${one_value_args}" "${multi_value_args}" ${ARGN})
 
@@ -62,8 +62,8 @@ function(install_protobuf)
   # C++ protobuf
   ExternalProject_Add(protobuf
     DOWNLOAD_DIR ${ARG_DOWNLOAD_DIR}
-    URL ${ARG_URL}
-    URL_MD5 ${ARG_URL_MD5}
+    GIT_REPOSITORY ${ARG_GIT_REPOSITORY}
+    GIT_TAG ${ARG_GIT_TAG}
     SOURCE_DIR "${source_dir}"
     INSTALL_DIR "${install_dir}"
     CONFIGURE_COMMAND ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR} <SOURCE_DIR>/cmake ${cmake_args}

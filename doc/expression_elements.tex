@@ -131,12 +131,16 @@ The {\tt FieldAccess} is a expression that defines an access to a field
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default,frame=none]
-(^\concept{FieldDecl}^,^\concept{Offset}^+)
+(^\concept{Offset}^+)
 \end{lstlisting}
 
 \begin{HIRChildElements}
-	\HIRElementDef{FieldDecl}
-	{The field decl that is being accessed in this expression}{R}
 	\HIRElementDef{Offset}
 	{An offset (relative to current grid position) used to de-reference the field access}{O}
 \end{HIRChildElements}
+\begin{HIRAttributes}
+	\HIRAttrDef{name}{string}
+	{The name of the field declaration that is being accessed in this expression}{R}
+\end{HIRAttributes}
+
+
