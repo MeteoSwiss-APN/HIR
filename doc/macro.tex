@@ -8,6 +8,15 @@
 \hyperref[cp:#1]{#1}
 }
 
+\newcommand{\irrconcept}[1]{
+\hypersetup{ 
+    colorlinks = true,
+    linkbordercolor = {black},
+}
+\hyperref[cp:#1]{#1}
+
+}
+
 \newcommand{\element}[1] {
 \subsection{{\tt #1} element}
 \label{cp:#1}
@@ -26,7 +35,7 @@
 \subsubsection*{Child elements}
 \begin{tabular}{|l|p{10cm}|c|}
 \hline
- name & description & R/O \\ \hline\hline
+ name & description & R/O/A \\ \hline\hline
 }{\end{tabular}}
 %
 \newcommand{\HIRElementDef}[3]{
@@ -36,7 +45,7 @@
 \subsubsection*{Attributes}
 \begin{tabular}{|l|c|p{10cm}|c|}
 \hline
-name & type & description & R/O \\ \hline\hline
+name & type & description & R/O/A \\ \hline\hline
 }{\end{tabular}}
 
 \newcommand{\HIRAttrDef}[4]{

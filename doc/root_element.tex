@@ -92,6 +92,14 @@ The {\tt ExternalKernel} defines a call to an external kernel, for which computa
 	{list of \concept{FieldDecl} that represents the output fields}{R}
 \end{HIRChildElements}
 
+\element{LocationType}
+A location on an irregular grid element, used to identify positions of fields and operations on the grid.
+
+\begin{HIRAttributesVal}
+	\HIRAttrValDef{location}{text}
+	{a location on an irregular grid element}{(node,cell,edge)}{R}
+\end{HIRAttributesVal}
+
 \element{GridDimension}
 
 The {\tt GridDimension} elements defines a dimension of a multidimensional space where fields are discretized and over which \concept{Computation}s iterate.
@@ -127,13 +135,20 @@ The {\tt DimensionInterval} defines an interval on a dimension.
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default,frame=none]
-(^\concept{DimensionLevel}^,^\concept{DimensionLevel}^)
+(^\concept{DimensionLevel}^|^\concept{Literal}^,^\concept{DimensionLevel}^|^\concept{Literal}^)
 \end{lstlisting}
 
 \begin{HIRChildElements}
 	\HIRElementDef{DimensionLevel}
-	{position placeholder on a dimension that defines the begin and end of the interval}{R}
+	{position placeholder on a dimension that defines the begin or end of the interval}{A}
+	\HIRElementDef{Literal}
+	{constant position on a dimension that defines the begin or end of the interval}{A}
 \end{HIRChildElements}
+
+\begin{HIRAttributesVal}
+	\HIRAttrValDef{LoopOrder}{text}
+	{specification of the loop order (only possible for a VerticalDimension) }{(forward, backward, parallel)}{O}
+\end{HIRAttributesVal}
 
 \element{Type}
 

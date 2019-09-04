@@ -134,7 +134,7 @@ The {\tt FieldAccess} is a expression that defines an access to a field
 (^\concept{Offset}^+)
 \end{lstlisting}
 
-\begin{HIRChildElements}
+\begin{HIRChildElements} 
 	\HIRElementDef{Offset}
 	{An offset (relative to current grid position) used to de-reference the field access}{O}
 \end{HIRChildElements}
@@ -142,5 +142,46 @@ The {\tt FieldAccess} is a expression that defines an access to a field
 	\HIRAttrDef{name}{string}
 	{The name of the field declaration that is being accessed in this expression}{R}
 \end{HIRAttributes}
+
+\element{AbsolutFieldAccess}
+The {\tt AbsolutFieldAccess} is a expression that defines a direct access to a grid point of a field, 
+opposite to a \concept{FieldAccess} that
+represents a relative access to a neighbour grid point.
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default,frame=none]
+(^\concept{Literal|VarAccess}^+)
+\end{lstlisting}
+
+\begin{HIRChildElements} 
+	\HIRElementDef{Offset}
+	{An offset (relative to current grid position) used to de-reference the field access}{A}
+\end{HIRChildElements}
+\begin{HIRAttributes}
+	\HIRAttrDef{name}{string}
+	{The name of the field declaration that is being accessed in this expression}{R}
+\end{HIRAttributes}
+
+\element{NeighbourReduce}
+A reduction operation over near neighbours of certain  \concept{LocationType}.
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default,frame=none]
+(^\concept{GridDimension}^+, ^\concept{Literal}^,^\concept{exprModel}^)
+\end{lstlisting}
+
+\begin{HIRChildElements} 
+	\HIRElementDef{GridDimension}
+	{the dimension of the neighbours where the reduction is applied}{R}
+	\HIRElementDef{Literal}{the initial value of the reduction}
+	\HIRElementDef{exprModel}{the expression applied to the data of each neighbour grid point that is reduced using the binary operator}{R}
+\end{HIRChildElements}
+ 
+\begin{HIRAttributesVal}
+	\HIRAttrValDef{op}{string}
+	{A reduction arithmetic operator}{(add, mul, min, max)}{R}
+\end{HIRAttributesVal}
 
 
