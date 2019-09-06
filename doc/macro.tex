@@ -5,16 +5,19 @@
 \def\DDAG{$^\ddagger$}
 %
 \newcommand{\concept}[1]{
+\hypersetup{ 
+	colorlinks = true,
+	linkcolor={blue},
+}
 \hyperref[cp:#1]{#1}
 }
 
 \newcommand{\irrconcept}[1]{
 \hypersetup{ 
     colorlinks = true,
-    linkbordercolor = {black},
+    linkcolor={Emerald},
 }
 \hyperref[cp:#1]{#1}
-
 }
 
 \newcommand{\element}[1] {
@@ -57,6 +60,14 @@ name & type & description & R/O/A \\ \hline\hline
 		\hline
 		name & type & description & suppoted values & R/O \\ \hline\hline
 	}{\end{tabular}}
+
+\newenvironment{HIRIrrAttributesVal}{
+	\subsubsection*{Irregular Grid Attributes}
+	\begin{tabular}{|l|c|p{8cm}|c | c|}
+		\hline
+		name & type & description & suppoted values & R/O \\ \hline\hline
+	}{\end{tabular}}
+
 
 \newcommand{\HIRAttrValDef}[5]{
 	{\tt #1} & #2 & #3 & #4 & #5\\ \hline }

@@ -143,20 +143,22 @@ The {\tt FieldAccess} is a expression that defines an access to a field
 	{The name of the field declaration that is being accessed in this expression}{R}
 \end{HIRAttributes}
 
-\element{AbsolutFieldAccess}
-The {\tt AbsolutFieldAccess} is a expression that defines a direct access to a grid point of a field, 
+\element{AbsoluteFieldAccess}
+The {\tt AbsoluteFieldAccess} is a expression that defines a direct access to a grid point of a field, 
 opposite to a \concept{FieldAccess} that
 represents a relative access to a neighbour grid point.
 
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default,frame=none]
-(^\concept{Literal|VarAccess}^+)
+(^\concept{VarAccess}^|^\concept{FieldAccess}^)+
 \end{lstlisting}
 
 \begin{HIRChildElements} 
-	\HIRElementDef{Offset}
-	{An offset (relative to current grid position) used to de-reference the field access}{A}
+	\HIRElementDef{VarAccess}
+	{Variable access that holds the index addressing the absolute field access}{A}
+	\HIRElementDef{FieldAccess}
+	{Field access that holds the index addressing the absolute field access}{A}
 \end{HIRChildElements}
 \begin{HIRAttributes}
 	\HIRAttrDef{name}{string}
@@ -164,18 +166,18 @@ represents a relative access to a neighbour grid point.
 \end{HIRAttributes}
 
 \element{NeighbourReduce}
-A reduction operation over near neighbours of certain  \concept{LocationType}.
+A reduction operation over near neighbours of certain  \irrconcept{LocationType}.
 
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default,frame=none]
-(^\concept{GridDimension}^+, ^\concept{Literal}^,^\concept{exprModel}^)
+(^\concept{GridDimension}^+,^\irrconcept{Literal}^,^\concept{exprModel}^)
 \end{lstlisting}
 
 \begin{HIRChildElements} 
 	\HIRElementDef{GridDimension}
 	{the dimension of the neighbours where the reduction is applied}{R}
-	\HIRElementDef{Literal}{the initial value of the reduction}
+	\HIRElementDef{Literal}{the initial value of the reduction}{R}
 	\HIRElementDef{exprModel}{the expression applied to the data of each neighbour grid point that is reduced using the binary operator}{R}
 \end{HIRChildElements}
  

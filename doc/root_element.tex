@@ -104,12 +104,25 @@ A location on an irregular grid element, used to identify positions of fields an
 
 The {\tt GridDimension} elements defines a dimension of a multidimensional space where fields are discretized and over which \concept{Computation}s iterate.
 
-\HIRContentsModel{ () }
+\HIRContentsModel{ }
+
+\begin{lstlisting}[style=default,frame=none]
+(^\irrconcept{LocationType}^)
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{LocationType}
+	{defines the location of the dimension within the irregular grid topology}{R}
+\end{HIRChildElements}
 
 \begin{HIRAttributes}
 	\HIRAttrDef{name}{text}
 	{Name of the dimension}{R}
 \end{HIRAttributes}
+\begin{HIRIrrAttributesVal}
+	\HIRAttrValDef{dimension type}{text}
+	{type of dimension population}{(sparse,dense)}{R}
+\end{HIRIrrAttributesVal}
 
 \element{DimensionLevel}
 
