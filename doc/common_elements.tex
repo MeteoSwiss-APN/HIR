@@ -7,7 +7,7 @@ The {\tt stmtModel} is commonly used for elements that refer statements.
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default,frame=none]
-(^\concept{VarDecl}^|^\concept{IfStmt}^|^\concept{BlockStmt}^)
+(^\concept{VarDecl}^|^\concept{IfStmt}^|^\concept{BlockStmt}^|^\concept{Computation}^)
 \end{lstlisting}
 
 
@@ -17,8 +17,8 @@ The {\tt exprModel} is commonly used for elements that refer expression.
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default,frame=none]
-where if (scope == domain_computation)    
-    (^\concept{unaryOpModel}^|^\concept{binaryOpModel}^|^\concept{TernaryOp}^|^\concept{Literal}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{FctCall}^)
+if (scope == domain_computation)    
+    (^\concept{unaryOpModel}^|^\concept{binaryOpModel}^|^\concept{TernaryOp}^|^\concept{Literal}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{FctCall}^|^\irrconcept{NeighbourReduce}^)
 else
     (^\concept{unaryOpModel}^|^\concept{binaryOpModel}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^|^\concept{FctCall}^)
 \end{lstlisting}

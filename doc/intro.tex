@@ -1,7 +1,7 @@
 \section{Introduction}
 
 
-This document provides a full specification of the HIR
+This document provides a full specification of the high-level intermediate representation (HIR) for weather and climate applications.
 
 \subsection{Conventions}
 
@@ -20,5 +20,17 @@ a node with two children, identified by {\tt lhs} and {\tt rhs}, where the {\tt 
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default,frame=none]
-(^\concept{FieldAccess}^, (^\concept{FieldAccess}^|^\concept{Literal}^))
+(^\concept{FieldAccess}^, (^\concept{VarAccess}^|^\concept{Literal}^))
 \end{lstlisting}
+
+The children elements are described as R (required)/O (optional)/A (any of several options).
+The previous example would define the children as 
+
+\begin{HIRChildElements}
+	\HIRElementDef{FieldAccess}
+	{description of semantic of child}{R}
+	\HIRElementDef{VarAccess}
+	{description of semantic of child}{A}
+		\HIRElementDef{Literal}
+	{description of semantic of child}{A}
+\end{HIRChildElements}

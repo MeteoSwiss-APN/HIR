@@ -126,7 +126,7 @@ The {\tt VarAccess} is a expression that defines an access to a \concept{VarDecl
 \end{HIRAttributes}
 
 \element{FieldAccess}
-The {\tt FieldAccess} is a expression that defines an access to a field
+The {\tt FieldAccess} is a expression that defines an (relative to each grid point) access to a field
 
 \subsubsection*{ContentsModel}{}
 
@@ -142,6 +142,16 @@ The {\tt FieldAccess} is a expression that defines an access to a field
 	\HIRAttrDef{name}{string}
 	{The name of the field declaration that is being accessed in this expression}{R}
 \end{HIRAttributes}
+
+Notice that the {\tt FieldAccess} node is available only for 
+Cartesian grids. 
+An exception is for irregular grids, when accessing cell or vertex
+location type neighbours of an edge, since the connectivity is always
+regular in this case (with two neighbour elements per edge). 
+Therefore the {\tt FieldAccess} is allowed for irregular grids
+when the \concept{Offset} is specified on a \concept{GridDimension} with 
+a non-edge \irrconcept{LocationType} and there the main 
+dense dimension of the \concept{Computation} node is {\tt edges}.
 
 \element{AbsoluteFieldAccess}
 The {\tt AbsoluteFieldAccess} is a expression that defines a direct access to a grid point of a field, 
@@ -171,7 +181,7 @@ A reduction operation over near neighbours of certain  \irrconcept{LocationType}
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default,frame=none]
-(^\concept{GridDimension}^+,^\irrconcept{Literal}^,^\concept{exprModel}^)
+(^\concept{GridDimension}^+,^\concept{Literal}^,^\concept{exprModel}^)
 \end{lstlisting}
 
 \begin{HIRChildElements} 
