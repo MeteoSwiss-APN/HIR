@@ -1,14 +1,46 @@
 \section{Introduction}
 
+\subsection{Background}
+The deliverable D2.1 presented a comprehensive 
+set of computational patterns derived from dwarfs and representative 
+computations of the models participating in the ESCAPE-2 project.
+Each computational pattern derived a set of language elements
+that would be necessary to express that type of computations
+in a way that language elements are minimal, orthogonal, simple 
+and non redundant. 
 
-This document provides a full specification of the high-level intermediate representation (HIR) for weather and climate applications.
-A full specification is presented as a set of concepts that
+This document provides a full and formal specification of 
+the high-level intermediate representation (HIR) for weather and climate applications.
+A full specification is presented as a set of concepts following
+the language elements identified in D2.1. They
 are organized as a tree to represent a full program. 
 Each concept captures a specific information of a the computational
 patterns supported by the DSL toolchain.
 The semantic of each node is described as well as its properties 
 and children nodes that it supports. 
- 
+The HIR serves as an interface between a language frontend (D2.3)
+and the implementation of a compiler toolchain that
+generates an efficient, parallel and optimized implementation 
+of a model described using a concise and compact frontend language. 
+
+
+\section{Scope of this deliverable}
+\subsection{Objectives of this deliverable} 
+The objective of this deliverable is to provide a technical 
+and formal specification of a full high-level intermediate
+representation.
+\subsection{Work performed in this deliverable} 
+A comprehensive set of concepts have been discussed and formalized
+in this document as a proposal for a standard intermediate representation. 
+A large fraction of the specification has been prototyped within
+the Dawn compiler, therefore proving that they are implementable and
+can feed an efficient DSL compiler toolchain. 
+Additionally a frontend has been developed (D2.3) with a concise
+language for numerical developments of weather codes, that is
+capable of translating the frontend language into an intermediate 
+representation. 
+\subsection{Deviations and counter measures} 
+There were no deviations from the project proposal for this deliverable.
 \subsection{Conventions}
 
 Some of the elements will allow to have different children type of nodes depending on the scope of the node.
