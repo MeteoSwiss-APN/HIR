@@ -1,0 +1,34 @@
+\section{Irregular Grid Elements}
+This section described elements that are valid only for
+the specification for models on irregular grid.
+
+\element{LocationType}
+Describes the location on a mesh element, 
+used to identify positions of fields and operations on 
+the grid.
+
+\begin{HIRAttributesVal}
+	\HIRAttrValDef{location}{text}
+	{a location on a mesh}{(node,cell,edge)}{R}
+\end{HIRAttributesVal}
+
+\element{NeighbourReduce}
+A reduction operation over near neighbours of certain  \irrconcept{LocationType}.
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default,frame=none]
+(^\concept{GridDimension}^+,^\concept{Literal}^,^\concept{exprModel}^)
+\end{lstlisting}
+
+\begin{HIRChildElements} 
+	\HIRElementDef{GridDimension}
+	{the dimension of the neighbours where the reduction is applied}{R}
+	\HIRElementDef{Literal}{the initial value of the reduction}{R}
+	\HIRElementDef{exprModel}{the expression applied to the data of each neighbour grid point that is reduced using the binary operator}{R}
+\end{HIRChildElements}
+
+\begin{HIRAttributesVal}
+	\HIRAttrValDef{op}{string}
+	{A reduction arithmetic operator}{(add, mul, min, max)}{R}
+\end{HIRAttributesVal}
