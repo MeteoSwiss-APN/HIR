@@ -2,7 +2,8 @@
 
 \element{Program}
 
-Description of the element {\tt Program} element:
+The Program element is the main entry point to the HIR
+specification of a program
 
 \subsubsection*{ContentsModel}{}
 
@@ -12,13 +13,13 @@ Description of the element {\tt Program} element:
 
 \begin{HIRChildElements}
 \HIRElementDef{GridDimension}
-{Definition of all the dimensions used within the program}{R}
+{definition of all the dimensions used within the program}{R}
 \HIRElementDef{Domain}
 {specifies a domain that serves as hints to the compiler}{R}
 \HIRElementDef{FieldDecl}
-{Definition of all the fields used by the program}{R}
+{definition of all the fields used by the program}{R}
 \HIRElementDef{VarDecl}
-{Definition of scalar variables arguments to the program}{O}
+{definition of scalar variables arguments to the program}{O}
 \HIRElementDef{ScopedProgram}
 {a scoped program with computational patterns supported by the concepts of the HIR}{O}
 \HIRElementDef{ExternalKernel}
@@ -28,12 +29,10 @@ Description of the element {\tt Program} element:
 \begin{HIRAttributes}
 \HIRAttrDef{HIRversion}{text}
 {version of the HIR}{R}
-\HIRAttrDef{DomainPolicy}{text}
-{policy that defines the domain of the HIR}{R}
 \HIRAttrDef{time}{text}
 {Date and time of translation}{O}
 \HIRAttrDef{language}{text}
-{source language information}{O}
+{source programming language information}{O}
 \HIRAttrDef{source}{text}
 {source code information}{O}
 \end{HIRAttributes}
@@ -62,7 +61,12 @@ The domain provides domain information of the application that is used as hints 
 
 \element{ScopedProgram}
 
-The {\tt ScopedProgram} defines all the computations performed using concepts of the HIR
+The {\tt ScopedProgram} defines all the computations performed 
+within a \concept{Program}, using concepts of the HIR,
+ contrary to 
+the \concept{ExternalKernel} that is described solely as 
+a call to an external solver (and therefore with no detailed
+information about the computations performed).
 
 \subsubsection*{ContentsModel}{}
 
@@ -77,28 +81,26 @@ The {\tt ScopedProgram} defines all the computations performed using concepts of
 
 \element{ExternalKernel}
 
-The {\tt ExternalKernel} defines a call to an external kernel, for which computations description is not provided
+The {\tt ExternalKernel} defines a call to an external kernel, for which computations description is not provided. 
+Therefore the element represent a call to a computation for
+which the only information given is the list of input/output 
+fields consumed by the external kernel. 
+It is used by the DSL compiler in order to avoid optimizations
+across external kernels that would violate data dependencies.
+
 
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default,frame=none]
-( Inputs, Outputs)
+( FieldDecl*, FieldDecl+)
 \end{lstlisting}
 
 \begin{HIRChildElements}
-	\HIRElementDef{Inputs}
-	{list of \concept{FieldDecl} that represents the input fields}{R}
-	\HIRElementDef{Outputs}
+	\HIRElementDef{FieldDecl}
+	{list of \concept{FieldDecl} that represents the input fields}{O}
+	\HIRElementDef{FieldDecl}
 	{list of \concept{FieldDecl} that represents the output fields}{R}
 \end{HIRChildElements}
-
-\element{LocationType}
-A location on an irregular grid element, used to identify positions of fields and operations on the grid.
-
-\begin{HIRAttributesVal}
-	\HIRAttrValDef{location}{text}
-	{a location on an irregular grid element}{(node,cell,edge)}{R}
-\end{HIRAttributesVal}
 
 \element{GridDimension}
 
@@ -124,6 +126,12 @@ The {\tt GridDimension} elements defines a dimension of a multidimensional space
 	{type of dimension population}{(sparse,dense)}{R}
 \end{HIRIrrAttributesVal}
 
+A dense dimension is used to defined the dimensionality of fields
+where there are grid points covering the entire domain. 
+A sparse dimension is used to describe a dimension
+ of a field for which only a vicinity of grid points in the mesh
+ will be allocated.
+ 
 \element{DimensionLevel}
 
 The {\tt DimensionLevel} it is used to specify a position (that is specified as a runtime argument to the \concept{Program}) in a given dimension
@@ -214,12 +222,13 @@ The {\tt Offset} is the relative distance in a given \concept{GridDimension} to 
 \end{HIRAttributes}
 
 \element{Computation}
-The {\tt Computation} defines an iteration loop over the specified \concept{GridDimension}s of the domain.
+The {\tt Computation} defines an iteration loop over the specified \concept{GridDimension}s of the domain (except for the vertical dimension, 
+that is specified using the \concept{VerticalRegion} element).
 
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default,frame=none]
-((^\concept{GridDimension}^|^\concept{DimensionInterval}^)+,(^\concept{BlockStmt}^))
+((^\concept{GridDimension}^)+,(^\concept{BlockStmt}^))
 \end{lstlisting}
 
 \begin{HIRChildElements}
@@ -235,6 +244,28 @@ The {\tt Computation} defines an iteration loop over the specified \concept{Grid
 
 For irregular grids, the \concept{GridDimension} can only 
 be specified for dense dimensions.
+
+\element{VerticalRegion}
+The {\tt VerticalRegion} is the equivalent to \concept{Computation}
+for the vertical dimension.
+The vertical dimension is treated specially since weather and 
+climate codes can specialize computations for different regions
+of the vertical domain.
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default,frame=none]
+((^\concept{DimensionInterval}^)+,(^\concept{Computation}^)+)
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{DimensionInterval}
+	{Provides a specific range on the vertical dimension where
+		the computations will be applied}{O}
+	\HIRElementDef{Computation}
+	{Specifies the computation that contains the list of statements to be applied to this region}{R}
+\end{HIRChildElements}
+
 
 \element{BoundaryCondition}
 The {\tt BoundaryCondition} defines the strategy to apply a boundary condition to a field, if required.

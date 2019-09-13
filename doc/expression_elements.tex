@@ -150,7 +150,7 @@ location type neighbours of an edge, since the connectivity is always
 regular in this case (with two neighbour elements per edge). 
 Therefore the {\tt FieldAccess} is allowed for irregular grids
 when the \concept{Offset} is specified on a \concept{GridDimension} with 
-a non-edge \irrconcept{LocationType} and there the main 
+a non-edge \irrconcept{LocationType} and where the main 
 dense dimension of the \concept{Computation} node is {\tt edges}.
 
 \element{AbsoluteFieldAccess}
@@ -175,25 +175,5 @@ represents a relative access to a neighbour grid point.
 	{The name of the field declaration that is being accessed in this expression}{R}
 \end{HIRAttributes}
 
-\element{NeighbourReduce}
-A reduction operation over near neighbours of certain  \irrconcept{LocationType}.
-
-\subsubsection*{ContentsModel}{}
-
-\begin{lstlisting}[style=default,frame=none]
-(^\concept{GridDimension}^+,^\concept{Literal}^,^\concept{exprModel}^)
-\end{lstlisting}
-
-\begin{HIRChildElements} 
-	\HIRElementDef{GridDimension}
-	{the dimension of the neighbours where the reduction is applied}{R}
-	\HIRElementDef{Literal}{the initial value of the reduction}{R}
-	\HIRElementDef{exprModel}{the expression applied to the data of each neighbour grid point that is reduced using the binary operator}{R}
-\end{HIRChildElements}
- 
-\begin{HIRAttributesVal}
-	\HIRAttrValDef{op}{string}
-	{A reduction arithmetic operator}{(add, mul, min, max)}{R}
-\end{HIRAttributesVal}
 
 

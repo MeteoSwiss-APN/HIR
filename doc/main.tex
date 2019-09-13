@@ -13,12 +13,16 @@
 %\usepackage{tgbonum}
 \usepackage{utopia}
 \usepackage[dvipsnames]{xcolor}
+\usepackage{fancyhdr}
+
+\usepackage{pdfpages}
 
 \usepackage{vruler}  %% if vertical ruler (line number) is needed
 
 \setcounter{secnumdepth}{4}
 \setcounter{totalnumber}{6}
 \usepackage{fancyhdr}
+\usepackage{microtype}
 
 \hoffset=0cm
 \oddsidemargin=0cm
@@ -35,6 +39,17 @@
 \renewcommand{\topfraction}{.99}
 \renewcommand{\bottomfraction}{.99}
 
+\fancyhf{}
+\fancyhead[LE,RO]{\bfseries\thepage}
+\fancyhead[LE]{\textit{ESCAPE-2 - D2.3: High-Level Intermediate (HIR) Representation Specification}}
+\fancyhead[RO]{\textit{ESCAPE-2 - D2.3: High-Level Intermediate (HIR) Representation Specification}}
+\fancyfoot[LE,RO]{\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyheadoffset[RE,LO]{\textwidth}
+\pagestyle{fancy}
+
+
 \input{macro.tex}
 
 \lstdefinestyle{default}{
@@ -50,26 +65,27 @@
 
 %% End of Preemble
 
-\title{{\Huge HIR}\\
-Specification\\
-\vspace{2cm}
-Version 0.1\\ }
+%\title{{\Huge HIR}\\
+%Specification\\
+%\vspace{2cm}
+%Version 0.1\\ }
 
-\author{
-\Large ESCAPE\\
-}
-\date{\vspace{4cm}\Large \today}
+%\author{
+%\Large ESCAPE\\
+%}
+%\date{\vspace{4cm}\Large \today}
 
 \makeindex
 
 \begin{document}
-\maketitle
+
+\includepdf[pages={1,2}]{./ESCAPE-2-D2-3_front_back.pdf}
 
 \clearpage
 %\input{history.tex}
 \cleardoublepage
 
-\pagenumbering{roman}
+
 \tableofcontents
 \listoffigures
 \listoftables
@@ -80,21 +96,39 @@ Version 0.1\\ }
 \newpage
 \mbox{}\newpage
 
-\pagestyle{fancy}
-\fancyhead{} % clear all header fields
-\fancyhead[RE]{\leftmark}
-\fancyhead[LO]{\rightmark}
-\fancyhead[LE,RO]{\thepage}
-\fancyfoot{} % clear all footer fields
-\renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrulewidth}{0pt}
-
 \input{intro.tex}
 \input{root_element.tex}
 \input{statement_elements.tex}
 \input{expression_elements.tex}
 \input{common_elements.tex}
+\input{irregular_grid_elements.tex}
 \input{example.tex}
+
+\section{Document History}
+
+\begin{tabular}{|l|l|l|l|}
+	\hline
+	Version & Author(s) & Date & Changes \\ 
+	&&& \\  \hline
+	1.0 & Carlos Osuna (MSWISS) & 09/09/2019 & Compilation and edit of all contributions \\ \hline
+\end{tabular}
+
+\section{Internal Review History}
+
+\begin{tabular}{|l|l|l|}
+	\hline
+	Internal Reviewers & Date & Comments \\ 
+\hline
+\end{tabular}
+
+\section{Effort Contributions per Partner}
+\begin{tabular}{|l|l|}
+	\hline
+	Partner& Efforts \\ 
+	\hline
+\end{tabular}
+
+\includepdf[pages={4}]{./ESCAPE-2-D2-3_front_back.pdf}
 
 \cleardoublepage
 

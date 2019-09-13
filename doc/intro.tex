@@ -2,20 +2,35 @@
 
 
 This document provides a full specification of the high-level intermediate representation (HIR) for weather and climate applications.
-
+A full specification is presented as a set of concepts that
+are organized as a tree to represent a full program. 
+Each concept captures a specific information of a the computational
+patterns supported by the DSL toolchain.
+The semantic of each node is described as well as its properties 
+and children nodes that it supports. 
+ 
 \subsection{Conventions}
 
 Some of the elements will allow to have different children type of nodes depending on the scope of the node.
 
-There are two scopes: 
+We defined two scopes: 
 \begin{enumerate}
 	\item {\tt control\_flow} defines the scope of nodes where one or more of the parallel dimensions of the \concept{Domain} are not yet resolved within a \concept{Computation}
 	\item {\tt domain\_computation} is the scope of nodes where all the parallel dimensions of the \concept{Domain} are resolved within a \concept{Computation}
 \end{enumerate}
 
-The {\bf ContentsModel} section of each node describes, using regular expression, that supported children nodes. 
-Some of the children are named nodes in order to identify in the specification of the node. The following example shows
-a node with two children, identified by {\tt lhs} and {\tt rhs}, where the {\tt rhs} can be either a \concept{FieldAccess} or a  \concept{Literal}
+The scope is defined in order to constrain the validity of certain nodes.
+For example, a \concept{FieldAccess} will not be valid in the 
+{\tt control\_flow} since we need to resolve all the grid dimensions
+in order to be able to access a field for a grid point.
+
+
+The {\bf ContentsModel} section of each node describes, using regular expressions, the type of nodes that are expected/supported for its children nodes. 
+Children nodes are identified by position. 
+
+The following example shows
+a node with two children ({\tt lhs} and {\tt rhs}) where 
+the {\tt lhs} is a \concept{FieldAccess} and the {\tt rhs} can be either a \concept{VarAccess} or a  \concept{Literal}
 
 \subsubsection*{ContentsModel}{}
 
@@ -23,8 +38,10 @@ a node with two children, identified by {\tt lhs} and {\tt rhs}, where the {\tt 
 (^\concept{FieldAccess}^, (^\concept{VarAccess}^|^\concept{Literal}^))
 \end{lstlisting}
 
-The children elements are described as R (required)/O (optional)/A (any of several options).
-The previous example would define the children as 
+The semantic and properties of the children elements are 
+described in a following table, where the property is defined 
+as R (required)/O (optional)/A (any of several options).
+The previous example would describe its children as 
 
 \begin{HIRChildElements}
 	\HIRElementDef{FieldAccess}
@@ -34,3 +51,25 @@ The previous example would define the children as
 		\HIRElementDef{Literal}
 	{description of semantic of child}{A}
 \end{HIRChildElements}
+
+This version of the specification supports two category of models, 
+according to the horizontal grid employed: Cartesian grids and
+irregular grids (like icosahedral or octahedral grids). 
+Most of the elements are common, however some are only 
+supported for the irregular grids category. 
+
+Unless otherwise specified, an element will be considered 
+shared for the two categories.
+References to elements of the two distinct categories 
+are highlighted using different colors. 
+For example the following content model: 
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default,frame=none]
+(^\concept{FieldAccess}^, (^\irrconcept{LocationType}^))
+\end{lstlisting}
+
+requires a \concept{FieldAccess} node and additionall, 
+only for irregular grid models, a \irrconcept{LocationType}
+node.

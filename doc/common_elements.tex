@@ -7,7 +7,10 @@ The {\tt stmtModel} is commonly used for elements that refer statements.
 \subsubsection*{ContentsModel}{}
 
 \begin{lstlisting}[style=default,frame=none]
-(^\concept{VarDecl}^|^\concept{IfStmt}^|^\concept{BlockStmt}^|^\concept{Computation}^)
+if (scope == domain_computation)    
+  (^\concept{VarDecl}^|^\concept{IfStmt}^|^\concept{BlockStmt}^)
+else
+  (^\concept{VarDecl}^|^\concept{IfStmt}^|^\concept{BlockStmt}^|^\concept{VerticalRegion}^)
 \end{lstlisting}
 
 
