@@ -1,0 +1,8 @@
+
+missing cocepts according to D2.1:
+
+* dot_product
+* indirect level access using a map
+* sparse_if (or likely, unlikely scalar functions of type bool -> bool)
+* loop_on(sparse dimension)
+* loop(extra dimension): maybe we agreed to skip this?
