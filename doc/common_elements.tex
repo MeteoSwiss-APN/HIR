@@ -1,5 +1,9 @@
 \section{Common elements}
-The definitions commonly used in an arbitrary element are shown in this Section.
+The definitions in this section are aliases to define nodes 
+commonly used in the documentation. 
+They do not exist as real nodes of the specification. 
+Any entry of a Model node found in the documentation must be replace by the 
+equivalent list of nodes provided here. 
 
 \model{stmtModel}
 The {\tt stmtModel} is commonly used for elements that refer statements.
@@ -8,7 +12,7 @@ The {\tt stmtModel} is commonly used for elements that refer statements.
 
 \begin{lstlisting}[style=default,frame=none]
 if (scope == domain_computation)    
-  (^\concept{VarDecl}^|^\concept{IfStmt}^|^\concept{BlockStmt}^)
+  (^\concept{VarDecl}^|^\concept{IfStmt}^|^\concept{SparseIfStmt}^|^\concept{BlockStmt}^|^\concept{LoopOn}^)
 else
   (^\concept{VarDecl}^|^\concept{IfStmt}^|^\concept{BlockStmt}^|^\concept{VerticalRegion}^)
 \end{lstlisting}

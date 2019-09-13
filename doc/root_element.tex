@@ -221,30 +221,6 @@ The {\tt Offset} is the relative distance in a given \concept{GridDimension} to 
 	{relative distance in the given dimension of the offset}{R}
 \end{HIRAttributes}
 
-\element{Computation}
-The {\tt Computation} defines an iteration loop over the specified \concept{GridDimension}s of the domain (except for the vertical dimension, 
-that is specified using the \concept{VerticalRegion} element).
-
-\subsubsection*{ContentsModel}{}
-
-\begin{lstlisting}[style=default,frame=none]
-((^\concept{GridDimension}^)+,(^\concept{BlockStmt}^))
-\end{lstlisting}
-
-\begin{HIRChildElements}
-	\HIRElementDef{GridDimension}
-	{Specifies the dimensions where the computation is defined,
-		convering the whole extent of the grid for that dimension}{O}
-	\HIRElementDef{DimensionInterval}
-	{Provides a specific range on a dimension to iterate over}{O}
-	\HIRElementDef{BlockStmt}
-	{Specifies the block with the list of statements that form the computation}{R}
-\end{HIRChildElements}
-
-
-For irregular grids, the \concept{GridDimension} can only 
-be specified for dense dimensions.
-
 \element{VerticalRegion}
 The {\tt VerticalRegion} is the equivalent to \concept{Computation}
 for the vertical dimension.
@@ -266,6 +242,26 @@ of the vertical domain.
 	{Specifies the computation that contains the list of statements to be applied to this region}{R}
 \end{HIRChildElements}
 
+\element{Computation}
+The {\tt Computation} defines an iteration loop over the specified \concept{GridDimension}s of the domain (except for the vertical dimension, 
+that is specified using the \concept{VerticalRegion} element).
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default,frame=none]
+((^\concept{GridDimension}^)+,(^\concept{BlockStmt}^))
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{GridDimension}
+	{Specifies the dense dimensions where the computation is defined,
+		convering the whole extent of the grid for that dimension}{O}
+	\HIRElementDef{BlockStmt}
+	{Specifies the block with the list of statements that form the computation}{R}
+\end{HIRChildElements}
+
+For irregular grids, the \concept{GridDimension} can only 
+be specified for dense dimensions.
 
 \element{BoundaryCondition}
 The {\tt BoundaryCondition} defines the strategy to apply a boundary condition to a field, if required.

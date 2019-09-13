@@ -175,5 +175,24 @@ represents a relative access to a neighbour grid point.
 	{The name of the field declaration that is being accessed in this expression}{R}
 \end{HIRAttributes}
 
+\element{DotProduct}
+The {\tt DotProduct} defines an element for a scalar product
+of two vectors allocated in a sparse dimension of a field.
 
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default,frame=none]
+(^\concept{GridDimension}^,^\concept{FieldAccess}^,^\concept{GridDimension}^,^\concept{FieldAccess}^)
+\end{lstlisting}
+
+\begin{HIRChildElements} 
+	\HIRElementDef{GridDimension}
+	{The dimension identifying the vector within the first field}{R}
+	\HIRElementDef{FieldAccess}
+	{First vector of the scalar product}{R}
+		\HIRElementDef{GridDimension}
+	{The dimension identifying the vector within the second field}{R}
+	\HIRElementDef{FieldAccess}
+	{Second vector of the scalar product}{R}
+\end{HIRChildElements}
 

@@ -1,5 +1,29 @@
 \section{Statement elements}
 
+\element{LoopOn}
+
+The {\tt LoopOn} describes an explicit loop on a sparse dimension of
+fields (opposite to the \concept{Computation} node that is 
+used only for dense dimensions).
+The separation is made to distinguish between loops around 
+dense dimensions where the parallelization is performed and sparse 
+dimensions not affected by that.  
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default,frame=none]
+((^\concept{GridDimension}^)+,(^\concept{BlockStmt}^))
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{GridDimension}
+	{Specifies the sparse dimensions where the computation is defined,
+		convering the whole extent of the grid for that dimension}{O}
+	\HIRElementDef{BlockStmt}
+	{Specifies the block with the list of statements that form the computation}{R}
+\end{HIRChildElements}
+
+
 \element{VarDecl}
 
 The {\tt VarDecl} represents a N-dimensional scalar.
@@ -45,6 +69,33 @@ Condition = (^\concept{unaryOpModel}^|^\concept{binaryOpModel}^|^\concept{Ternar
 	{contains a sequence of \concept{stmtModel} that compose the {\tt Else} 
 	 computation of the block}{O}
 \end{HIRChildElements}
+
+\element{SparseIfStmt}
+The {\tt SparseIfStmt} represents the equivalent of an \concept{IfStmt} where the condition is seldom satisfied.
+
+\subsubsection*{ContentsModel}{}
+
+\begin{lstlisting}[style=default,frame=none]
+( Condition, Then, Else? )
+
+where if (scope == domain_computation)
+Condition = (^\concept{unaryOpModel}^|^\concept{binaryOpModel}^|^\concept{TernaryOp}^|^\concept{FieldAccess}^|^\concept{VarAccess}^|^\concept{Literal}^|^\irrconcept{NeighbourReduce}^)
+else
+Condition = (^\concept{unaryOpModel}^|^\concept{binaryOpModel}^|^\concept{TernaryOp}^|^\concept{VarAccess}^|^\concept{Literal}^)
+\end{lstlisting}
+
+\begin{HIRChildElements}
+	\HIRElementDef{Condition}
+	{contains expression that defines the condition of the if block}{R}
+	\HIRElementDef{Then}
+	{contains a sequence of \concept{stmtModel} that compose the {\tt then} 
+		computation of the block}{R}
+	\HIRElementDef{Else}
+	{contains a sequence of \concept{stmtModel} that compose the {\tt Else} 
+		computation of the block}{O}
+\end{HIRChildElements}
+
+The {\tt SparseIfStmt} is only valid in a {\tt domain\_computation} scope.
 
 \element{BlockStmt}
 The {\tt BlockStmt} is a statement element that defines an block (of statements).
