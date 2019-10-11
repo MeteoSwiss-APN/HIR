@@ -39,17 +39,6 @@
 \renewcommand{\topfraction}{.99}
 \renewcommand{\bottomfraction}{.99}
 
-\fancyhf{}
-\fancyhead[LE,RO]{\bfseries\thepage}
-\fancyhead[LE]{\textit{ESCAPE-2 - D2.3: High-Level Intermediate (HIR) Representation Specification}}
-\fancyhead[RO]{\textit{ESCAPE-2 - D2.3: High-Level Intermediate (HIR) Representation Specification}}
-\fancyfoot[LE,RO]{\thepage}
-\renewcommand{\headrulewidth}{0.5pt}
-\renewcommand{\footrulewidth}{0pt}
-\fancyheadoffset[RE,LO]{\textwidth}
-\pagestyle{fancy}
-
-
 \input{macro.tex}
 
 \lstdefinestyle{default}{
@@ -65,21 +54,17 @@
 
 %% End of Preemble
 
-%\title{{\Huge HIR}\\
-%Specification\\
-%\vspace{2cm}
-%Version 0.1\\ }
-
-%\author{
-%\Large ESCAPE\\
-%}
-%\date{\vspace{4cm}\Large \today}
+\title{{\Huge HIR}\\
+Specification\\
+\vspace{2cm}
+Version 0.1\\ }
 
 \makeindex
 
+
 \begin{document}
 
-\includepdf[pages={1,2}]{./ESCAPE-2-D2-3_front_back.pdf}
+\maketitle
 
 \clearpage
 %\input{history.tex}
@@ -87,8 +72,8 @@
 
 
 \tableofcontents
-\listoffigures
-\listoftables
+%\listoffigures
+%\listoftables
 %%%%\listoftables
 
 %\input{ack.tex}
@@ -103,34 +88,6 @@
 \input{common_elements.tex}
 \input{irregular_grid_elements.tex}
 \input{example.tex}
-
-\section{Document History}
-
-\begin{tabular}{|l|l|l|l|}
-	\hline
-	Version & Author(s) & Date & Changes \\ 
-	&&& \\  \hline
-	1.0 & Carlos Osuna (MSWISS) & 09/09/2019 & Compilation and edit of all contributions \\ \hline
-\end{tabular}
-
-\section{Internal Review History}
-
-\begin{tabular}{|l|l|l|}
-	\hline
-	Internal Reviewers & Date & Comments \\ 
-\hline
-\end{tabular}
-
-\section{Effort Contributions per Partner}
-\begin{tabular}{|l|l|}
-	\hline
-	Partner& Efforts \\  \hline
-	MSWISS & 4 \\ \hline
-	DKRZ & - \\ \hline
-	ECMWF & - \\ \hline
-\end{tabular}
-
-\includepdf[pages={4}]{./ESCAPE-2-D2-3_front_back.pdf}
 
 \cleardoublepage
 
